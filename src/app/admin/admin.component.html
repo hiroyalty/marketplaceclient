@@ -1,6 +1,138 @@
+<div class="row">
+    <div class="col-md-6">
+    
+    <form [formGroup]="form.getForm()" (ngSubmit)="createProjectCategory()">
+        <h4 class="form-signup-heading" align="center">
+            Create New Project Category
+        </h4>
+        <div class="form-group">
+            <label for="pctitle">Title</label>
+            <input type="text" class="form-control" formControlName="pctitle">
+            <div *ngIf="form.hasError('pctitle')" class="alert alert-danger">
+                {{form.getError('pctitle')}}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="pcdescription">Description</label>
+            <textarea type="text" class="form-control" formControlName="pcdescription"></textarea>
+            <div *ngIf="form.hasError('pcdescription')" class="alert alert-danger">
+                {{form.getError('pcdescription')}}
+            </div>
+        </div>
 
-<h1>Admin</h1>
-<h2>Orders</h2>
-<ul>
-  <li *ngFor="let order of orders">{{ order }}</li>
-</ul>
+    <!--subcategory -->
+    <fieldset formArrayName="subcategories">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Subcategories</h4>
+                <a (click)="addSubCategory()" class="btn btn-outline-info btn-sm pull-right">
+                    Add sub-category
+                </a>
+        
+        <div *ngFor="let subcategory of form.getControl('subcategories').controls; let i=index" class="card-body">
+          <div class="card-header">
+            <span>subcategory {{i + 1}}</span>
+          </div>
+          <div class="panel-body" [formGroupName]="i">
+            <div class="form-group col-xs-6">
+            <label></label>
+            <div class="input-group">
+            <input type="text" class="form-control" formControlName="subcategory">
+            <span class="input-group-addon">
+                <a *ngIf="form.getControl('subcategories').controls.length >= 1"
+                    (click)="removeSubCategory(i)">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                </a>   
+            </span>
+            </div>
+            <div *ngIf="form.getChildGroup('subcategories', i).hasError('subcategory')" class="alert alert-danger">
+            {{form.getChildGroup('subcategories', i).getError('subcategory')}}
+            </div>
+            </div>
+          </div>
+        </div>
+        </div>
+        </div>
+    </fieldset>
+    <button 
+        class="btn btn-primary spacextra">
+        Save</button>
+    </form>
+
+    </div>
+    <div class="col-md-6">
+    <table class="table">
+        <thead>
+            <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Description</th>
+            <th scope="col">SubCategories</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let uc of pcategories">
+            <th scope="row">#</th>
+            <td>{{ uc.pctitle }}</td>
+            <td>{{ uc.pcdescription }}</td>
+            <td><ul *ngFor="let sub of uc.subcategories">
+                <li>{{ sub.subcategory }}</li>
+            </ul></td>
+            <td><button type="button" (click)="deleteProjectCategory(uc)" class="btn btn-danger">Delete</button></td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+</div>
+
+<div>
+    <hr class="bigspace">
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+    <form #f="ngForm"  (ngSubmit)="createUserCategory(f)">
+        <h4 class="form-signup-heading" align="center">
+            Create New User Category
+        </h4>
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input #title="ngModel" [(ngModel)]="usercategory.title" name="title" id="title" type="text" class="form-control" required>
+            <div class="alert alert-danger" *ngIf="title.touched && title.invalid">
+            Title is required.
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="description">description</label>
+            <textarea #description="ngModel" [(ngModel)]="usercategory.description" name="description" id="description" class="form-control" rows="5" required>
+            </textarea>
+            <div class="alert alert-danger" *ngIf="description.touched && description.invalid">
+            description is required.
+            </div>
+        </div>
+        <button 
+            [disabled]="!f.valid"
+            class="btn btn-primary">Save</button>
+    </form> 
+    </div>
+    <div class="col-md-6">
+    <table class="table">
+        <thead>
+            <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Description</th>
+            <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let uc of ucategories">
+            <th scope="row">#</th>
+            <td>{{ uc.title }}</td>
+            <td>{{ uc.description }}</td>
+            <td><button type="button" (click)="deleteUserCategory(uc)" class="btn btn-danger">Delete</button></td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+</div>

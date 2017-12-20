@@ -1,9 +1,31 @@
 <form class="form-signin" #f="ngForm" (ngSubmit)="signIn(f.value)">
-  <h2 class="form-signin-heading">Please sign in</h2>
-  <div *ngIf="invalidLogin" class="alert alert-danger">Invalid username and/or password.</div>
-  <label for="inputEmail" class="sr-only">Email address</label>
-  <input type="email" id="inputEmail" name="email" ngModel class="form-control" placeholder="Email address" required autofocus>
-  <label for="inputPassword" class="sr-only">Password</label>
-  <input type="password" id="inputPassword" name="password" ngModel class="form-control" placeholder="Password" required>
-  <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+  <h2 class="form-signin-heading text-center">
+    Login
+  </h2>
+  <!--<div class="row">
+    <p-growl [value]="getMessages()"></p-growl>
+  </div>
+  <div *ngIf=errorMessage class="alert alert-danger">
+    Invalid Username and/or Password<!--{{ errorMessage }} --
+  </div> -->
+  <div class="form-group">
+    <label for="email" class="sr-only">Email address</label>
+    <input ngModel name="email" #email="ngModel" type="text" id="email" class="form-control" placeholder="Email address" required autofocus>
+    <div class="alert alert-danger" *ngIf="email.touched && email.invalid">
+      Email is required.
+    </div>
+  </div>
+  <div class="from-group">
+    <label for="password" class="sr-only">Password</label>
+    <input ngModel name="password" #password="ngModel" type="password" id="password" class="form-control" placeholder="Password" required>
+    <div class="alert alert-danger" *ngIf="password.touched && password.invalid">
+      Password is required.
+    </div>
+  </div>
+  <button 
+    [disabled]="!f.valid"
+    class="btn btn-lg btn-primary btn-block">Login</button>
+  <div class="text-center">
+    <a routerLink="/forgotpassword" class="btn btn-light">Forgot your Password</a>
+  </div>
 </form>

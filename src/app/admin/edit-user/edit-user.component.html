@@ -1,0 +1,71 @@
+<div class="row">
+  <div class="col-md-6">
+    <form #f="ngForm" (ngSubmit)="save(f.value)">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input #username="ngModel" [(ngModel)]="user.username" name="username" id="username" type="text" class="form-control" required>
+        <div class="alert alert-danger" *ngIf="username.touched && username.invalid">
+          Username is required
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <div class="input-group">
+          <span class="input-group-addon">@</span>
+          <input #email="ngModel" [(ngModel)]="user.email" name="email" id="email" type="text" class="form-control" required email>
+        </div>
+        <div class="alert alert-danger" *ngIf="email.touched && email.invalid">
+          Valid Email is required
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="firstname">Firstname</label>
+        <input #firstname="ngModel" [(ngModel)]="user.firstname" name="firstname" id="firstname" type="text" class="form-control" required>
+        <div class="alert alert-danger" *ngIf="firstname.touched && firstname.invalid">
+          Firstname is required.
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="lastname">Lastname</label>
+        <input #lastname="ngModel" [(ngModel)]="user.lastname" name="lastname" id="lastname" type="text" class="form-control" required>
+        <div class="alert alert-danger" *ngIf="lastname.touched && lastname.invalid">
+          Lastname is required.
+        </div>
+      </div>
+       
+      <div class="form-group">
+        <label for="role">Category</label>
+        <select #role="ngModel" [(ngModel)]="user.role" name="role" id="role" class="form-control" required>
+          <option value=""></option>
+          <option *ngFor="let c of ucategories" [value]="c.title">
+            {{ c.title }}
+          </option>
+        </select>
+        <div class="alert alert-danger" *ngIf="role.touched && role.invalid">
+          role is required
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="imageUrl">Image Url</label>
+        <input #imageUrl="ngModel" [(ngModel)]="user.imageUrl" name="imageUrl" id="imageUrl" type="text" class="form-control" required url>
+        <div class="alert alert-danger" *ngIf="imageUrl.touched && imageUrl.invalid">
+          <div *ngIf="imageUrl.errors.required">Image Url is required</div>
+          <div *ngIf="imageUrl.errors.url">Please provide a correct Url</div>
+        </div>
+      </div>
+      <button class="btn btn-primary">Save</button>
+      <button type="button" (click)="delete()" class="btn btn-danger">Delete</button>
+    </form> 
+  </div>
+  <div class="col-md-6">
+    <!--<user-card [user]="user" [show-actions]="false"></user-card> -->
+    <div *ngIf="user.username" class="card pull-right" style="width: 20rem;">
+      <img class="card-img-top" *ngIf="user.picture" src="{{ user.picture }}" alt="{{ user.username }}">
+      <div class="card-body">
+        <h4 class="card-title">{{ user.username }}</h4>
+        <p *ngIf="user.username === currentUser.username" class="card-text">Upload Picture | Delete Picture</p>
+      </div>
+    </div> 
+  </div>
+</div>
+

@@ -1,0 +1,17 @@
+.spaced {
+    padding-top: 10px;
+}
+.aa:focus{
+    outline: 0 !important;  
+}
+.active  {
+outline:0;
+color: #fff;
+border-color: #357ebd;
+}
+.card {
+    margin-bottom: 20px;
+}
+.list-group-item {
+    cursor: pointer;
+}

@@ -1,0 +1,98 @@
+<nav class="navbar navbar-expand-md navbar-light bg-light fixed-top">
+  <div class="container-fluid">
+  <a class="navbar-brand logo py-0" routerLink="/">
+    Market Place
+  </a>
+  <!--<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>-->
+
+  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    <div class="col-md-4">
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Categories
+        </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a 
+              *ngFor="let category of projectCategories" 
+              class="dropdown-item" 
+              routerLink="/"
+              [queryParams]="{ category: category.pctitle }"
+              >
+              {{category.pctitle}}
+            </a>
+          </div>
+      </div>
+    </div> 
+
+    <div class="col-md-4">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Search for..." aria-label="Search for...">
+        <span class="input-group-btn py-0">
+          <button class="btn btn-secondary" type="button">
+            <i class="fa fa-search" aria-hidden="true"></i>
+          </button>
+        </span>
+      </div>
+    </div> 
+
+    <div class="col-md-4">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/aboutteams">
+          Market for Team
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/aboutemployers">
+          Become an Employer
+          </a>
+        </li>
+        <ng-template #anonymousUser>
+        <li class="nav-item">
+          <a *ngIf="!isLoggedIn()" class="nav-link" routerLink="/login">Login</a>
+        </li>
+        </ng-template>
+        <li class="nav-item"> 
+          <a *ngIf="!isLoggedIn()" class="nav-link" routerLink="/signup">
+          Sign Up
+          </a>
+        </li>
+        <!--<div class="dropdown" *ngIf="isLoggedIn(); else anonymousUser">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{ currentUser.username }}
+          </button>
+        </div>-->
+        <li ngbDropdown *ngIf="isLoggedIn(); else anonymousUser" class="nav-item dropdown">
+          <img *ngIf="currentUser.picture" src="{{ currentUser.picture }}" ngbDropdownToggle class="nav-link dropdown-toggle rounded-circle" 
+            id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:3em; height:3em;" />
+          <a *ngIf="!currentUser.picture" ngbDropdownToggle class="nav-link dropdown-toggle" 
+            id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{currentUser.username}}
+          </a>
+          
+          <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdown01">
+            <a class="dropdown-item" routerLink="/my/messages">My Messages</a>
+            <ng-container *ngIf="isLoggedIn() && checkUserRole('admin')" class="">
+              <a class="dropdown-item" routerLink="/admin">Admin Operations</a>
+              <a class="dropdown-item" routerLink="/admin/manage-users">Manage Users</a>
+              <a class="dropdown-item" routerLink="/admin/projects">Manage Projects</a>
+            </ng-container>
+            <ng-container *ngIf="isLoggedIn() && checkUserRole('employer')" class="">
+              <a class="dropdown-item" routerLink="/employer/myprojects">My Projects</a>
+            </ng-container>
+            <ng-container *ngIf="isLoggedIn() && checkUserRole('member')" class="">
+              <a class="dropdown-item" routerLink="/mem/myprojects">My Projects</a>
+              <a class="dropdown-item" routerLink="/mem/mysettings">My Settings</a>
+            </ng-container>
+            <a class="dropdown-item" routerLink="/help">help</a>
+            <a class="dropdown-item" *ngIf="isLoggedIn()" (click)="logout()">Log Out</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+  </div>
+</nav>

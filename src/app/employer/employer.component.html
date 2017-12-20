@@ -1,0 +1,68 @@
+<h3>All Projects</h3>
+<p>
+  <a routerLink="/employer/projects/new" class="btn btn-primary">New Project</a>
+</p>
+<p>
+  <input 
+    #query
+    (keyup)="filter(query.value)"
+    type="text" class="form-control" placeholder="Search...">
+</p>
+<div class="float-right">
+  <a (click)="refreshUsers()">
+    <i class="fa fa-refresh point" aria-hidden="true"></i>
+  </a>
+</div>
+<data-table
+  [items]="items"
+  [itemCount]="itemCount"
+  (reload)="reloadItems($event)"
+>
+  <data-table-column
+    [property]="'title'"
+    [header]="'Title'"
+    [sortable]="true"
+    [resizable]="true"
+  >
+  </data-table-column>
+  <data-table-column
+    [property]="'category'"
+    [header]="'Category'"
+    [sortable]="true"
+    [resizable]="true"
+  >
+  </data-table-column>
+  <data-table-column
+    [property]="'awardedTo'"
+    [header]="'Awarded'"
+    [sortable]="true"
+    [resizable]="true"
+  >
+  </data-table-column>
+  <data-table-column
+    [property]="'status'"
+    [header]="'Status'"
+    [sortable]="true"
+    [resizable]="true"
+  >
+  </data-table-column>
+  <data-table-column
+    [property]="'_id'"
+    [resizable]="true"
+  >
+    <ng-template #dataTableCell let-item="item">
+      <a [routerLink]="['/employer/edit-project/', item._id]">Edit</a>
+    </ng-template>
+  </data-table-column>
+  <data-table-column
+    [property]="'_id'"
+    [header]="Delete"
+    [resizable]="true"
+  > 
+  <ng-template #dataTableCell let-item="item">
+    <a (click)="deleteUser(item)">
+      <i class="fa fa-trash point" aria-hidden="true"></i>
+    </a>
+  </ng-template>
+</data-table-column>
+</data-table>

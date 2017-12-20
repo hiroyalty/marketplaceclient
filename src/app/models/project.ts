@@ -1,0 +1,37 @@
+export interface Project {
+    _id: string;
+    title: string;
+    description: string;
+    projecttype: string;
+    bigdataNoSQL: string;
+    RelationalDB: string;
+    programming: string;
+    webdevelopment: string;
+    networking: string;
+    cloudcomputing: string;
+    operatingsystem: string;
+    rhapsberrypi: string;
+    devices: string;
+    games: string;
+    android: string;
+    ios: string;
+    windowsphone: string;
+    postedBy: {};
+    category: string;
+    awardedTo: string;
+    applicantList: Array<{id: string}>;
+    numofapplicants: number;
+    location: string;
+    offeredTo: string;
+    status: string;
+    projectlifespan: string;
+    url: string;
+    imageUrl: string;
+    projectdocs: {};
+    additionalinfo: string;
+    datepublished: Date;
+    applicationdeadline: Date;
+    dateupdated: Date;
+    employerfeedback: Array<{message: string}>;
+    awardeefeedback: Array<{message: string}>;
+}

@@ -1,0 +1,406 @@
+
+<div class="row">
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-header">
+        Project Settings
+      </div>
+      <ul class="list-group list-group-flush">
+        <a class="list-group-item list-group-item-action"
+          (click)="activateGeneralInfo()"
+          [class.active]="generalInfo"
+          [class.inactive]="!generalInfo">Project General Info</a>
+        
+        <a class="list-group-item list-group-item-action"
+          (click)="activateAdditionalDocuments()"
+          [class.active]="additionalDocuments"
+          [class.inactive]="!additionalDocuments">Additional Documents</a>
+
+        <a class="list-group-item list-group-item-action"
+          (click)="activateApplicantList()"
+          [class.active]="applicantList"
+          [class.inactive]="!applicantList">Applicants List</a>
+  
+        <a class="list-group-item list-group-item-action"
+          (click)="activateAboutEmployer()"
+          [class.active]="aboutEmployer"
+          [class.inactive]="!aboutEmployer">About Employer</a>
+
+        <a class="list-group-item list-group-item-action"
+          (click)="activateAllProjects()"
+          [class.active]="allProjects"
+          [class.inactive]="!allProjects">All Projects</a>
+      </ul>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <form *ngIf="generalInfo" [formGroup]="form" (ngSubmit)="save(form.value)">
+      <div class="form-group" [ngClass]="{'has-error':!form.controls['title'].valid && form.controls['title'].touched}">
+        <label for="title">Title</label>
+        <input type="text" formControlName="title" id="title" class="form-control" #title [readonly]="id">
+        <div *ngIf="form.controls['title'].hasError('required') && form.controls['title'].touched" class="alert alert-danger">
+          Project Title is required.
+        </div>
+        <div *ngIf="form.controls['title'].hasError('minlength') && form.controls['title'].touched" class="alert alert-danger">
+          Project Title must be at least 5 characters long.
+        </div>
+        <div *ngIf="form.controls['title'].hasError('maxlength') && form.controls['title'].touched" class="alert alert-danger">
+          Project Title cannot exceed 50 characters.
+        </div>
+        <!--<div *ngIf="!title.valid && form.submitted" class="alert alert-danger">
+          Project Title has already been used.
+        </div>-->
+      </div>
+      <div class="form-group" [ngClass]="{'has-error':!form.controls['description'].valid && form.controls['description'].touched}">
+        <label for="description">Description</label>
+        <textarea formControlName="description" id="description" rows="4" class="form-control"></textarea>
+        <div *ngIf="form.controls['description'].hasError('required') && form.controls['description'].touched" class="alert alert-danger">
+          Project description is required.
+        </div>
+      </div>
+      <div class="form-group" [ngClass]="{'has-error':!form.controls['category'].valid && form.controls['category'].touched}">
+        <label for="category">Category</label>
+        <select formControlName="category" id="category" class="form-control" name="category">
+          <option value=""></option>
+          <option *ngFor="let category of projectCategories" [value]="category.pctitle">
+            {{ category.pctitle }}
+          </option>
+        </select>
+        <div *ngIf="form.controls['category'].hasError('required') && form.controls['category'].touched" class="alert alert-danger">
+          Project Category is required.
+        </div>
+      </div> 
+      <div class="form-group" [ngClass]="{'has-error':!form.controls['location'].valid && form.controls['location'].touched}">
+        <label for="location">Location</label>
+        <input formControlName="location" id="location" type="text" class="form-control" placeholder="remote or name of city">
+        <small id="locationHelp" class="form-text text-muted">Either remote or the City</small>
+        <div *ngIf="form.controls['location'].hasError('required') && form.controls['location'].touched" class="alert alert-danger">
+          Project Location is required.
+        </div>
+      </div>
+      <div class="form-group" [ngClass]="{'has-error':!form.controls['url'].valid && form.controls['url'].touched}">
+        <label for="url">URL</label>
+        <input formControlName="url" id="url" type="text" class="form-control" placeholder="https://example.com/">
+        <small id="urlHelp" class="form-text text-muted">https://example.com/</small>
+        <div *ngIf="form.controls['url'].hasError('required') && form.controls['url'].touched" class="alert alert-danger">
+          Project External URL is required.
+        </div>
+      </div>
+      <div class="form-group" [ngClass]="{'has-error':!form.controls['status'].valid && form.controls['status'].touched}">
+        <label for="status">Status</label>
+        <select formControlName="status" id="status" class="form-control" name="status">
+          <option value=""></option>
+          <option *ngFor="let s of statusVal" [value]="s.id">
+            {{ s.name }}
+          </option>
+        </select>
+        <div *ngIf="form.controls['status'].hasError('required') && form.controls['status'].touched" class="alert alert-danger">
+          Project Status is required.
+        </div>
+      </div>
+      <div class="form-group" [ngClass]="{'has-error':!form.controls['projectlifespan'].valid && form.controls['projectlifespan'].touched}">
+        <label for="projectlifespan">Project Duration(weeks)</label>
+        <input formControlName="projectlifespan" id="projectlifespan" type="number" class="form-control">
+        <div *ngIf="form.controls['projectlifespan'].hasError('required') && form.controls['projectlifespan'].touched" class="alert alert-danger">
+          Project Duration is required.
+        </div>
+      </div>
+      <div class="form-group" [ngClass]="{'has-error':!form.controls['applicationdeadline'].valid && form.controls['applicationdeadline'].touched}">
+        <label for="applicationdeadline">Application Deadline</label>
+        <mat-form-field>
+          <!--<input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="applicationdeadline" formControlName="applicationdeadline" name="applicationdeadline" placeholder="Choose a date" class="form-control">-->
+          <input matInput [matDatepicker]="applicationdeadline" formControlName="applicationdeadline" name="applicationdeadline" placeholder="Choose a date" class="form-control">
+          <mat-datepicker-toggle matSuffix [for]="applicationdeadline"></mat-datepicker-toggle>
+          <mat-datepicker #applicationdeadline></mat-datepicker>
+        </mat-form-field>
+        <div *ngIf="form.controls['applicationdeadline'].hasError('required') && form.controls['applicationdeadline'].touched" class="alert alert-danger">
+          Application Deadline is required.
+        </div>
+        <!--<div *ngIf="form.controls['applicationdeadline'].hasError('min') && form.controls['applicationdeadline'].touched" class="alert alert-danger">
+          Date must be greater than Selected date
+        </div>-->
+      </div>
+      <div class="card card-default">
+        <div class="card-header">
+          <span>Project Skill Requirement</span>
+          <span class="pull-right" >
+            <!--<i class="fa fa-times" aria-hidden="true"></i>-->
+            
+            <i class="fa fa-thumb-tack" aria-hidden="true"></i>
+          </span>
+        </div>
+        <div class="card-body">
+          <div class="form-group col-xs-6" [ngClass]="{'has-error':!form.controls['bigdataNoSQL'].valid && form.controls['bigdataNoSQL'].touched}">
+            <label for="bigdataNoSQL">bigdataNoSQL</label>
+            <select formControlName="bigdataNoSQL" id="bigdataNoSQL" class="form-control">
+              <option value=""></option>
+              <option *ngFor="let e of enumVal" [value]="e.id">
+                {{ e.name }}
+              </option>
+            </select>
+            <div *ngIf="form.controls['bigdataNoSQL'].hasError('required') && form.controls['bigdataNoSQL'].touched" class="alert alert-danger">
+              No SQL/Big Data Skill Set level is required.
+            </div>
+          </div>
+          <div class="form-group col-xs-6" [ngClass]="{'has-error':!form.controls['RelationalDB'].valid && form.controls['RelationalDB'].touched}">
+            <label for="RelationalDB">RelationalDB</label>
+            <select formControlName="RelationalDB" id="RelationalDB" class="form-control">
+              <option value=""></option>
+              <option *ngFor="let e of enumVal" [value]="e.id">
+                {{ e.name }}
+              </option>
+            </select>
+            <div *ngIf="form.controls['RelationalDB'].hasError('required') && form.controls['RelationalDB'].touched" class="alert alert-danger">
+              Relational Database Skill level is required.
+            </div>
+          </div>
+          <div class="form-group col-xs-6" [ngClass]="{'has-error':!form.controls['programming'].valid && form.controls['programming'].touched}">
+            <label for="programming">Programming</label>
+            <select formControlName="programming" id="programming" class="form-control">
+              <option value=""></option>
+              <option *ngFor="let e of enumVal" [value]="e.id">
+                {{ e.name }}
+              </option>
+            </select>
+            <div *ngIf="form.controls['programming'].hasError('required') && form.controls['programming'].touched" class="alert alert-danger">
+              Programming Skill level is required.
+            </div>
+          </div>
+          <div class="form-group col-xs-6" [ngClass]="{'has-error':!form.controls['webdevelopment'].valid && form.controls['webdevelopment'].touched}">
+            <label for="webdevelopment">Web Development</label>
+            <select formControlName="webdevelopment" id="webdevelopment" class="form-control">
+              <option value=""></option>
+              <option *ngFor="let e of enumVal" [value]="e.id">
+                {{ e.name }}
+              </option>
+            </select>
+            <div *ngIf="form.controls['webdevelopment'].hasError('required') && form.controls['webdevelopment'].touched" class="alert alert-danger">
+              Web Development Skill level is required.
+            </div>
+          </div>
+          <div class="form-group col-xs-6" [ngClass]="{'has-error':!form.controls['networking'].valid && form.controls['networking'].touched}">
+            <label for="networking">Networking</label>
+            <select formControlName="networking" id="networking" class="form-control">
+              <option value=""></option>
+              <option *ngFor="let e of enumVal" [value]="e.id">
+                {{ e.name }}
+              </option>
+            </select>
+            <div *ngIf="form.controls['networking'].hasError('required') && form.controls['networking'].touched" class="alert alert-danger">
+              Networking Skill Level is required.
+            </div>
+          </div>
+          <div class="form-group col-xs-6" [ngClass]="{'has-error':!form.controls['cloudcomputing'].valid && form.controls['cloudcomputing'].touched}">
+            <label for="cloudcomputing">Cloud Computing</label>
+            <select formControlName="cloudcomputing" id="cloudcomputing" class="form-control">
+              <option value=""></option>
+              <option *ngFor="let e of enumVal" [value]="e.id">
+                {{ e.name }}
+              </option>
+            </select>
+            <div *ngIf="form.controls['cloudcomputing'].hasError('required') && form.controls['cloudcomputing'].touched" class="alert alert-danger">
+              Cloud Computing Skill level is required.
+            </div>
+          </div>
+          <div class="form-group col-xs-6" [ngClass]="{'has-error':!form.controls['operatingsystem'].valid && form.controls['operatingsystem'].touched}">
+            <label for="operatingsystem">Operating System</label>
+            <select formControlName="operatingsystem" id="operatingsystem" class="form-control">
+              <option value=""></option>
+              <option *ngFor="let e of enumVal" [value]="e.id">
+                {{ e.name }}
+              </option>
+            </select>
+            <div *ngIf="form.controls['operatingsystem'].hasError('required') && form.controls['operatingsystem'].touched" class="alert alert-danger">
+              Operating System Skill level is required.
+            </div>
+          </div>
+          <div class="form-group col-xs-6" [ngClass]="{'has-error':!form.controls['games'].valid && form.controls['games'].touched}">
+            <label for="games">Games</label>
+            <select formControlName="games" id="games" class="form-control">
+              <option value=""></option>
+              <option *ngFor="let e of enumVal" [value]="e.id">
+                {{ e.name }}
+              </option>
+            </select>
+            <div *ngIf="form.controls['games'].hasError('required') && form.controls['games'].touched" class="alert alert-danger">
+              Games Skill level is required.
+            </div>
+          </div>
+          <div class="form-group col-xs-6" [ngClass]="{'has-error':!form.controls['devices'].valid && form.controls['devices'].touched}">
+            <label for="devices">Devices</label>
+            <select formControlName="devices" id="devices" class="form-control">
+              <option value=""></option>
+              <option *ngFor="let e of enumVal" [value]="e.id">
+                {{ e.name }}
+              </option>
+            </select>
+            <div *ngIf="form.controls['devices'].hasError('required') && form.controls['devices'].touched" class="alert alert-danger">
+              Devices Skill level is required.
+            </div>
+          </div>
+          <div class="form-group col-xs-6" [ngClass]="{'has-error':!form.controls['android'].valid && form.controls['android'].touched}">
+            <label for="android">Android</label>
+            <select formControlName="android" id="android" class="form-control">
+              <option value=""></option>
+              <option *ngFor="let e of enumVal" [value]="e.id">
+                {{ e.name }}
+              </option>
+            </select>
+            <div *ngIf="form.controls['android'].hasError('required') && form.controls['android'].touched" class="alert alert-danger">
+              Android Skill level is required.
+            </div>
+          </div>
+          <div class="form-group col-xs-6" [ngClass]="{'has-error':!form.controls['ios'].valid && form.controls['ios'].touched}">
+            <label for="ios">IOS</label>
+            <select formControlName="ios" id="ios" class="form-control">
+              <option value=""></option>
+              <option *ngFor="let e of enumVal" [value]="e.id">
+                {{ e.name }}
+              </option>
+            </select>
+            <div *ngIf="form.controls['ios'].hasError('required') && form.controls['ios'].touched" class="alert alert-danger">
+              IOS Skill level is required.
+            </div>
+          </div>
+          <div class="form-group col-xs-6" [ngClass]="{'has-error':!form.controls['windowsphone'].valid && form.controls['windowsphone'].touched}">
+            <label for="windowsphone">Windows Phone</label>
+            <select formControlName="windowsphone" id="windowsphone" class="form-control">
+              <option value=""></option>
+              <option *ngFor="let e of enumVal" [value]="e.id">
+                {{ e.name }}
+              </option>
+            </select>
+            <div *ngIf="form.controls['windowsphone'].hasError('required') && form.controls['windowsphone'].touched" class="alert alert-danger">
+              Windows Phone Skill level is required.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--<div class="form-group col-xs-6 spaced" [ngClass]="{'has-error':!form.controls['image'].valid && form.controls['image'].touched}"></div>-->
+      <div class="form-group col-xs-6 spaced">
+        <label for="image">Project Image</label>
+        <input type="file" id="image" accept="image/*" (change)="getFileimage($event)" #image hidden="true">
+        <input type="file" id="updateimage" accept="image/*" (change)="updateProjectImage($event)" #updateimage hidden="true">
+        <div class="card-block">
+          <div *ngIf="imageUrl" class="card-img-top">
+            <img class="card-img-top" src="{{ imageUrl }}" alt="{{ title }}">
+            <button type="button" (click)="updateimage.click()" class="btn btn-info card-img-top">Update Project Image</button>
+          </div>
+          <div *ngIf="!imageUrl"class="card-img-top">
+            <button type="button" (click)="image.click()" class="btn btn-info">Upload Project Image</button>
+            <i class="fa fa-times point" aria-hidden="true" (click)="clearFile()"></i>
+          </div>
+        </div>
+        <!--<div *ngIf="form.controls['image'].hasError('required') && form.controls['image'].touched" class="alert alert-danger">
+          Project Image is required.
+        </div>-->
+      </div>
+
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+        Save<i class="fa fa-spinner fa-spin fa-fw" aria-hidden="true" *ngIf="loading"></i>            
+      </button>
+      <button type="button" (click)="delete()" class="btn btn-danger">Delete</button>
+    </form>
+
+    <form *ngIf="additionalDocuments && id" #fmr="ngForm">
+      <div class="form-group">
+        <label>Upload Additional Documents</label>
+        <input type="file" id="projectdoc" name="projectdoc" class="form-control btn btn-outline-success" (change)="getFiles($event, fmr)" ngModel #projectdoc="ngModel" multiple/>
+      </div>
+      <input *ngIf="projectdocsuploadbutton" type="button"  class="btn btn-info btn-sm" (click)="uploadprojectdocs(fmr)" value="Upload Documents">
+      <small id="projectdocsHelp" class="form-text text-muted">You can upload maximum four documents</small>
+      <hr/>
+      <div>
+        Refresh to See Changes
+        <img src="/assets/images/refresh.png" (click)="refreshProjectDetails()" width="30" height="30" class="point">
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>File Name</th>
+            <th>Download</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="projectdocs">
+          <tr *ngFor="let filename of projectdocs">
+            <th scope="row">#</th>
+            <td>File</td>
+            <td><a href="{{filename}}" download="projectdoc">
+              <img src="assets/images/file-icon.png" width="30" height="30">
+            </a></td>
+            <td><i class="fa fa-trash point" aria-hidden="true" (click)=deleteADoc(filename)></i></td>
+          </tr>
+        </tbody>
+      </table>
+  
+    </form>
+
+    <div *ngIf="additionalDocuments && (!id)" class="alert alert-info" role="alert">
+      <strong>Unauthorized!</strong> You can only Add Additional Documents to already created Project.
+    </div>
+
+    <form *ngIf="applicantList && id" #fal="ngForm">
+      <div>
+        Refresh to See Changes
+        <img src="/assets/images/refresh.png" width="30" height="30" class="point">
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Applicant Username</th>
+            <th>Award Project</th>
+            <th>Revoke Rroject</th>
+            <th>See Details</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="applicantList">
+          <!--<tr *ngFor="let applicant of applicantList">
+            <th scope="row">#</th>
+            <td>File</td>
+            <td><a href="{{filename}}" download="projectdoc">
+              <img src="assets/images/file-icon.png" width="30" height="30">
+            </a></td>
+            <td><i class="fa fa-trash point" aria-hidden="true" (click)=deleteADoc(filename)></i></td>
+          </tr> -->
+        </tbody>
+      </table>
+  
+    </form>
+
+    <div *ngIf="applicantList && (!id)" class="alert alert-info" role="alert">
+      <strong>Unauthorized!</strong> You can only see Applicant List of already created Project.
+    </div>    
+
+    <form *ngIf="aboutEmployer && id" #fem="ngForm">
+      <label for="username" class="spaced">Username</label>
+      <input #username="ngModel" [(ngModel)]="project.postedBy.username" name="username" id="username" type="text" class="form-control" readonly>
+      <label for="email" class="spaced">Email</label>
+      <input #email="ngModel" [(ngModel)]="project.postedBy.email" name="email" id="email" type="text" class="form-control" readonly>
+      <label for="role" class="spaced">Role</label>
+      <input #role="ngModel" [(ngModel)]="project.postedBy.role" name="role" id="role" type="text" class="form-control" readonly>
+      <label for="url" class="spaced">Website</label>
+      <input #url="ngModel" [(ngModel)]="project.postedBy.url" name="url" id="url" type="text" class="form-control" readonly>
+      <label for="picture" class="spaced">Image</label>
+      <div class="card mx-auto" style="width: 14rem;">
+        <ng-template #defaultimage>
+          <img class="card-img-top" src="/assets/images/defaultpicture.png" alt="{{ project.postedBy.username }}">
+        </ng-template>
+        <div *ngIf="project.postedBy.picture;else defaultimage" class="card-block">
+          <img class="card-img-top" src="{{ project.postedBy.picture }}" alt="{{ project.postedBy.username }}">    
+        </div>
+      </div>
+    </form>
+
+    <div *ngIf="aboutEmployer && (!id)" class="alert alert-info" role="alert">
+      <strong>Unauthorized!</strong> You can only view Employer's Info of already created Project.
+    </div>
+
+  </div>
+  <div class="col-md-3">
+    <!--<project-card [project]="project" [show-actions]="false"></project-card> -->
+  </div>
+</div>

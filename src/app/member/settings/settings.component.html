@@ -1,0 +1,715 @@
+<div class="row">
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-header">
+        Personal Settings
+      </div>
+      <ul class="list-group list-group-flush">
+        <a class="list-group-item list-group-item-action"
+          (click)="activateProfile()"
+          [class.active]="profile"
+          [class.inactive]="!profile">Profile</a>
+        
+        <a class="list-group-item list-group-item-action"
+          (click)="activateCV()"
+          [class.active]="cv"
+          [class.inactive]="!cv">CV</a>
+  
+        <a class="list-group-item list-group-item-action"
+          (click)="activateDatabase()"
+          [class.active]="database"
+          [class.inactive]="!database">Database</a>
+  
+        <a class="list-group-item list-group-item-action"
+          (click)="activateProgramming()"
+          [class.active]="program"
+          [class.inactive]="!program">Programming</a>
+  
+        <a class="list-group-item list-group-item-action"
+          (click)="activateWeb()"
+          [class.active]="web"
+          [class.inactive]="!web">Web Development</a>
+  
+        <a class="list-group-item list-group-item-action"
+          (click)="activateMobile()"
+          [class.active]="mobile"
+          [class.inactive]="!mobile">Mobile Development</a>
+  
+        <a class="list-group-item list-group-item-action"
+          (click)="activateNet()"
+          [class.active]="net"
+          [class.inactive]="!net">Networking | Operating System</a>
+  
+        <a class="list-group-item list-group-item-action"
+          (click)="activateGames()"
+          [class.active]="games"
+          [class.inactive]="!games">Games | Devices</a>
+  
+        <a class="list-group-item list-group-item-action"
+          (click)="activateProject()"
+          [class.active]="project"
+          [class.inactive]="!project">Project Interest</a>
+  
+        <a class="list-group-item list-group-item-action"
+          (click)="activatechangepassword()"
+          [class.active]="password"
+          [class.inactive]="!password">Update Password</a>
+      </ul>
+    </div>
+  </div>
+  <div class="col-md-6">
+  <form *ngIf="profile" #f="ngForm" (ngSubmit)="save(f)">
+    <div class="form-group">
+      <label for="firstname">Firstname</label>
+      <input #firstname="ngModel" [(ngModel)]="currentUser.firstname" name="firstname" id="firstname" type="text" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="lastname">Lastname</label>
+      <input #lastname="ngModel" [(ngModel)]="currentUser.lastname" name="lastname" id="lastname" type="text" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="Email">Email</label>
+      <div class="input-group">
+        <span class="input-group-addon">@</span>
+        <input #email="ngModel" [(ngModel)]="currentUser.email" name="email" id="email" type="text" class="form-control" readonly>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="url">URL</label>
+      <div class="input-group">
+        <span class="input-group-addon">
+          <i class="fa fa-external-link" aria-hidden="true"></i>
+        </span>
+        <input #url="ngModel" [(ngModel)]="currentUser.url" name="url" id="url" type="text" class="form-control">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="bio">Bio</label>
+      <textarea #bio="ngModel" [(ngModel)]="currentUser.bio" name="bio" id="bio"
+        class="form-control" placeholder="Tell us a little about yourself"></textarea>
+      <div class="alert alert-danger" *ngIf="bio.touched && bio.invalid">
+        Bio is required
+      </div>
+    </div>
+    <div ngModelGroup="address" class="card card-default">
+      <div class="card-header">
+        <span>Address</span>
+        <span class="pull-right" >
+          <!--<i class="fa fa-times" aria-hidden="true"></i>-->
+          <i class="fa fa-thumb-tack" aria-hidden="true"></i>
+        </span>
+      </div>
+      <div class="card-body">
+        <div class="form-group col-xs-6">
+          <label for="street">Street</label>
+          <input #street="ngModel" [(ngModel)]="currentUser.street" name="street" id="street" type="text" class="form-control">
+        </div>
+        <div class="form-group col-xs-6">
+          <label for="city">City</label>
+          <input #city="ngModel" [(ngModel)]="currentUser.city" name="city" id="city" type="text" class="form-control">
+        </div>
+        <div class="form-group col-xs-6">
+          <label for="region">Region</label>
+          <input #region="ngModel" [(ngModel)]="currentUser.region" name="region" id="region" type="text" class="form-control">
+        </div>
+        <div class="form-group col-xs-6">
+          <label for="zip">ZIP</label>
+          <input #zip="ngModel" [(ngModel)]="currentUser.zip" name="zip" id="zip" type="text" class="form-control">
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary">Update</button>
+    
+  </form>
+
+  <form *ngIf="cv" #fmr="ngForm">
+    <div class="form-group">
+      <label>Upload CV</label>
+      <input type="file" id="cv" name="cv" class="form-control btn btn-outline-success" (change)="getFiles($event)" ngModel #cv="ngModel" />
+    </div>
+    <input *ngIf="cvuploadbutton" type="button"  class="btn btn-info btn-sm" (click)="uploadCV(fmr)" value="Upload CV">
+    <hr/>
+    <div class="form-group">
+      <label>Upload Cover Letter</label>
+      <input type="file" id="coverletter" name="coverletter" class="form-control btn btn-outline-success" (change)="getFilesCover($event)" ngModel #coverletter="ngModel" />
+    </div>
+    <input *ngIf="coverletteruploadbutton" type="button"  class="btn btn-info btn-sm" (click)="uploadCoverletter(fmr)" value="Upload Coverletter">
+    <div></div>
+    <hr/>
+    <div>
+      Refresh to See Changes
+      <img src="/assets/images/refresh.png" (click)="refreshUserDetails()" width="30" height="30" class="point">
+    </div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>File Name</th>
+          <th>Download</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="usercv">
+          <th scope="row">#</th>
+          <td>CV</td>
+          <td><a href="{{currentUser.cv}}">
+            <img src="assets/images/{{currentUser.cvicon}}.png" width="30" height="30">
+          </a></td>
+          <td><i class="fa fa-trash point" aria-hidden="true" (click)=deleteFile(currentUser.cv)></i></td>
+        </tr>
+        <tr *ngIf="usercoverletter">
+          <th scope="row">#</th>
+          <td>Cover Letter</td>
+          <td><a href="{{currentUser.coverletter}}">
+            <img src="assets/images/{{currentUser.coverlettericon}}.png" width="30" height="30">
+          </a></td>
+          <td><i class="fa fa-trash point" aria-hidden="true" (click)=deleteFile(currentUser.coverletter)></i></td>
+        </tr>
+      </tbody>
+    </table>
+
+  </form>
+ 
+  <form *ngIf="database" #f="ngForm" (ngSubmit)="save(f)">
+    <div class="card card-default">
+      <div class="card-header">
+        <span>Database SkillSet</span>
+        <span class="pull-right" >
+          <!--<i class="fa fa-times" aria-hidden="true"></i>-->
+          <i class="fa fa-thumb-tack" aria-hidden="true"></i>
+        </span>
+      </div>
+      <div class="card-body">
+        <div class="form-group col-xs-6">
+          <label for="bigdataNoSQL">BigData | NoSQL</label>
+          <select #bigdataNoSQL="ngModel"[(ngModel)]="currentUser.bigdataNoSQL" name="bigdataNoSQL" id="bigdataNoSQL" class="form-control">
+            <option value=""></option>
+            <option *ngFor="let e of enumVal" [ngValue]="e.id">
+              {{ e.name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group col-xs-6">
+          <label for="mySQL">mySQL</label>
+          <select #mysql="ngModel" [(ngModel)]="currentUser.mysql" name="mysql" id="mysql" class="form-control">
+            <option value=""></option>
+            <option *ngFor="let e of enumVal" [ngValue]="e.id">
+              {{ e.name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group col-xs-6">
+          <label for="oracle">ORACLE</label>
+          <select #oracle="ngModel" [(ngModel)]="currentUser.oracle" name="oracle" id="oracle" class="form-control">
+            <option value=""></option>
+            <option *ngFor="let e of enumVal" [value]="e.id">
+              {{ e.name }}
+            </option>
+          </select>
+        </div>    
+        <div class="form-group col-xs-6">
+          <label for="sqlserver">SQLSERVER</label>
+          <select #sqlserver="ngModel" [(ngModel)]="currentUser.sqlserver" name="sqlserver" id="sqlserver" class="form-control">
+            <option value=""></option>
+            <option *ngFor="let e of enumVal" [value]="e.id">
+              {{ e.name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group col-xs-6">
+          <label for="postgresql">PostgreSQL</label>
+          <select #postgresql="ngModel" [(ngModel)]="currentUser.postgresql" name="postgresql" id="postgresql" class="form-control">
+            <option value=""></option>
+            <option *ngFor="let e of enumVal" [value]="e.id">
+              {{ e.name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group col-xs-6">
+          <label for="sqlite">SQLite</label>
+          <select #sqlite="ngModel" [(ngModel)]="currentUser.sqlite" name="sqlite" id="sqlite" class="form-control">
+            <option value=""></option>
+            <option *ngFor="let e of enumVal" [value]="e.id">
+              {{ e.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-primary">Update</button>
+  </form>
+
+  <form *ngIf="program" #f="ngForm" (ngSubmit)="save(f)">
+    <div class="card card-default">
+      <div class="card-header">
+        <span>Programming SkillSet</span>
+        <span class="pull-right" >
+          <!--<i class="fa fa-times" aria-hidden="true"></i>-->
+          <i class="fa fa-thumb-tack" aria-hidden="true"></i>
+        </span>
+      </div>
+      <div class="card-body">
+        <div class="form-group col-xs-6">
+          <label for="java">Java</label>
+          <select #java="ngModel" [(ngModel)]="currentUser.java" name="java" id="java" class="form-control">
+            <option value=""></option>
+            <option *ngFor="let e of enumVal" [value]="e.id">
+              {{e.name}}
+            </option>
+          </select>
+        </div>
+        <div class="form-group col-xs-6">
+          <label for="python">Python</label>
+          <select #python="ngModel" [(ngModel)]="currentUser.python" name="python" id="python" class="form-control">
+            <option value=""></option>
+            <option *ngFor="let e of enumVal" [value]="e.id">
+              {{e.name}}
+            </option>
+          </select>
+        </div>
+        <div class="form-group col-xs-6">
+          <label for="csharp">C#</label>
+          <select #csharp="ngModel" [(ngModel)]="currentUser.csharp" name="csharp" id="csharp" class="form-control">
+            <option value=""></option>
+            <option *ngFor="let e of enumVal" [value]="e.id">
+              {{e.name}}
+            </option>
+          </select>
+        </div>
+        <div class="form-group col-xs-6">
+          <label for="c">C</label>
+          <select #c="ngModel" [(ngModel)]="currentUser.c" name="c" id="c" class="form-control">
+            <option value=""></option>
+            <option *ngFor="let e of enumVal" [value]="e.id">
+              {{e.name}}
+            </option>
+          </select>
+        </div>
+        <div class="form-group col-xs-6">
+          <label for="cplusplus">C++</label>
+          <select #cplusplus="ngModel" [(ngModel)]="currentUser.cplusplus" name="cplusplus" id="cplusplus" class="form-control">
+            <option value=""></option>
+            <option *ngFor="let e of enumVal" [value]="e.id">
+              {{e.name}}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-primary">Update</button>
+  </form>
+
+  <form *ngIf="web" #f="ngForm" (ngSubmit)="save(f)">
+    <div class="card card-default">
+      <div class="card-header">
+        <span>Web Application Development SkillSet</span>
+        <span class="pull-right" >
+          <!--<i class="fa fa-times" aria-hidden="true"></i>-->
+          <i class="fa fa-thumb-tack" aria-hidden="true"></i>
+        </span>
+      </div>
+      <div class="card-body">
+        <div class="form-group col-xs-6">
+          <label for="php">PHP</label>
+          <select #php="ngModel" [(ngModel)]="currentUser.php" name="php" id="php" class="form-control">
+            <option value=""></option>
+            <option *ngFor="let e of enumVal" [value]="e.id">
+              {{ e.name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group col-xs-6">
+          <label for="javascript">JavaScript</label>
+          <select #javascript="ngModel" [(ngModel)]="currentUser.javascript" name="javascript" id="javascript" class="form-control">
+            <option value=""></option>
+            <option *ngFor="let e of enumVal" [value]="e.id">
+              {{ e.name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group col-xs-6">
+          <label for="html5">HTML5</label>
+          <select #html5="ngModel" [(ngModel)]="currentUser.html5" name="html5" id="html5" class="form-control">
+            <option value=""></option>
+            <option *ngFor="let e of enumVal" [value]="e.id">
+              {{ e.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-primary">Update</button>
+  </form>
+
+  <form *ngIf="net" #f="ngForm" (ngSubmit)="save(f)">
+    <div class="card card-default">
+      <div class="card-header">
+        <span>Networking SkillSet</span>
+        <span class="pull-right" >
+          <!--<i class="fa fa-times" aria-hidden="true"></i>-->
+          <i class="fa fa-thumb-tack" aria-hidden="true"></i>
+        </span>
+      </div>
+      <div class="card-body">
+        <div class="form-group col-xs-6">
+          <label for="networking">Networking</label>
+          <select #networking="ngModel" [(ngModel)]="currentUser.networking" name="networking" id="networking" class="form-control">
+            <option value=""></option>
+            <option *ngFor="let e of enumVal" [value]="e.id">
+              {{ e.name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group col-xs-6">
+          <label for="linux">LINUX</label>
+          <select #linux="ngModel" [(ngModel)]="currentUser.linux" name="linux" id="linux" class="form-control">
+            <option value=""></option>
+            <option *ngFor="let e of enumVal" [value]="e.id">
+              {{ e.name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group col-xs-6">
+          <label for="windows">WINDOWS</label>
+          <select #windows="ngModel" [(ngModel)]="currentUser.windows" name="windows" id="windows" class="form-control">
+            <option value=""></option>
+            <option *ngFor="let e of enumVal" [value]="e.id">
+              {{ e.name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group col-xs-6">
+          <label for="cloudcomputing">Cloud Computing</label>
+          <select #cloudcomputing="ngModel" [(ngModel)]="currentUser.cloudcomputing" name="cloudcomputing" id="windows" class="form-control">
+            <option value=""></option>
+            <option *ngFor="let e of enumVal" [value]="e.id">
+              {{ e.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-primary">Update</button>
+  </form>
+
+  <form *ngIf="games" #f="ngForm" (ngSubmit)="save(f)">
+    <div class="card card-default">
+      <div class="card-header">
+        <span>Games And Devices SkillSet</span>
+        <span class="pull-right" >
+          <!--<i class="fa fa-times" aria-hidden="true"></i>-->
+          <i class="fa fa-thumb-tack" aria-hidden="true"></i>
+        </span>
+      </div>
+      <div class="card-body">
+        <div class="form-group col-xs-6">
+          <label for="games">Games</label>
+          <select #games="ngModel" [(ngModel)]="currentUser.games" name="games" id="games" class="form-control">
+            <option value=""></option>
+            <option *ngFor="let e of enumVal" [value]="e.id">
+              {{ e.name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group col-xs-6">
+          <label for="devices">Devices</label>
+          <select #devices="ngModel" [(ngModel)]="currentUser.devices" name="devices" id="devices" class="form-control">
+            <option value=""></option>
+            <option *ngFor="let e of enumVal" [value]="e.id">
+              {{ e.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-primary">Update</button>
+  </form>
+
+  <form *ngIf="mobile" #f="ngForm" (ngSubmit)="save(f)">
+    <div class="card card-default">
+      <div class="card-header">
+        <span>Mobile Application Development SkillSet</span>
+        <span class="pull-right" >
+          <!--<i class="fa fa-times" aria-hidden="true"></i>-->
+          <i class="fa fa-thumb-tack" aria-hidden="true"></i>
+        </span>
+      </div>
+      <div class="card-body">
+        <div class="form-group col-xs-6">
+          <label for="android">Android</label>
+          <select #android="ngModel" [(ngModel)]="currentUser.android" name="android" id="android" class="form-control">
+            <option value=""></option>
+            <option *ngFor="let e of enumVal" [value]="e.id">
+              {{ e.name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group col-xs-6">
+          <label for="ios">IOS</label>
+          <select #ios="ngModel" [(ngModel)]="currentUser.ios" name="ios" id="ios" class="form-control">
+            <option value=""></option>
+            <option *ngFor="let e of enumVal" [value]="e.id">
+              {{ e.name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group col-xs-6">
+          <label for="windowsphone">Windows Phone</label>
+          <select #windowsphone="ngModel" [(ngModel)]="currentUser.windowsphone" name="windowsphone" id="windowsphone" class="form-control">
+            <option value=""></option>
+            <option *ngFor="let e of enumVal" [value]="e.id">
+              {{ e.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-primary">Update</button>
+  </form>
+
+  <form *ngIf="project" #f="ngForm" (ngSubmit)="updatePrefs(f)">
+    <div class="card card-default">
+      <div class="card-header">
+        <span>Set Project Interest Preferences</span>
+        <span class="pull-right" >
+          <!--<i class="fa fa-times" aria-hidden="true"></i>-->
+          <i class="fa fa-thumb-tack" aria-hidden="true"></i>
+        </span>
+      </div>
+      <div class="card-body">
+        <div class="form-group col-xs-6">
+          <mat-checkbox
+            #projectdatabase="ngModel"
+            [(ngModel)]="userPrefs.projectdatabase"
+            name="projectdatabase">
+            Interested in Database Projects</mat-checkbox>
+        </div>
+        <div *ngIf="projectdatabase ">
+          <div class="form-group col-xs-6">
+            <mat-checkbox
+              #probigdata="ngModel"
+              name="probigdata"
+              [(ngModel)]="userPrefs.probigdata"
+              >NoSQL DBs</mat-checkbox>
+            <span class="pull-right">
+              <mat-checkbox 
+                labelPosition="before"
+                #promysql="ngModel"
+                name="promysql"
+                [(ngModel)]="userPrefs.promysql"
+                >MySQL</mat-checkbox>
+            </span>
+          </div>
+          <div class="form-group col-xs-6">
+            <mat-checkbox
+              #prooracle="ngModel"
+              name="prooracle"
+              [(ngModel)]="userPrefs.prooracle"
+              >ORACLE</mat-checkbox>
+            <span class="pull-right">
+              <mat-checkbox 
+                labelPosition="before"
+                #prosqlserver="ngModel"
+                name="prosqlserver"
+                [(ngModel)]="userPrefs.prosqlserver"
+                >SQL SERVER</mat-checkbox>
+            </span>
+          </div>
+          <div class="form-group col-xs-6">
+            <mat-checkbox
+              #propostgresql="ngModel"
+              name="propostgresql"
+              [(ngModel)]="userPrefs.propostgresql"
+              >Postgre SQL</mat-checkbox>
+            <span class="pull-right">
+              <mat-checkbox 
+                labelPosition="before"
+                #prosqllite="ngModel"
+                name="prosqllite"
+                [(ngModel)]="userPrefs.prosqllite"
+                >SQL Lite</mat-checkbox>
+            </span>
+          </div>
+        </div> 
+
+        <hr/>
+
+        <div class="form-group col-xs-6">
+          <mat-checkbox
+            #projectprogramming="ngModel"
+            [(ngModel)]="userPrefs.projectprogramming"
+            name="projectprogramming">
+            Interested in programming Projects</mat-checkbox>
+        </div>
+        <div *ngIf="projectprogramming">
+          <div class="form-group col-xs-6">
+            <mat-checkbox
+              #projava="ngModel"
+              name="projava"
+              [(ngModel)]="userPrefs.projava">
+            JAVA</mat-checkbox>
+            <span class="pull-right">
+              <mat-checkbox 
+                labelPosition="before"
+                #propython="ngModel"
+                name="propython"
+                [(ngModel)]="userPrefs.propython">
+              PYTHON</mat-checkbox>
+            </span>
+          </div>
+          <div class="form-group col-xs-6">
+            <mat-checkbox
+              #procsharp="ngModel"
+              name="procsharp"
+              [(ngModel)]="userPrefs.procsharp">
+            C#</mat-checkbox>
+            <span class="pull-right">
+              <mat-checkbox 
+                labelPosition="before"
+                #procplusplus="ngModel"
+                name="procplusplus"
+                [(ngModel)]="userPrefs.procplusplus">
+              C++</mat-checkbox>
+            </span>
+          </div>
+          <div class="form-group col-xs-6">
+            <mat-checkbox
+            #proc="ngModel"
+            name="proc"
+            [(ngModel)]="userPrefs.proc">
+          C</mat-checkbox>
+            <span class="pull-right">
+              
+            </span>
+          </div>
+        </div>
+        
+        <hr/>
+
+        <div class="form-group col-xs-6">
+          <mat-checkbox
+            #projectweb="ngModel"
+            [(ngModel)]="userPrefs.projectweb"
+            name="projectweb">
+            Interested in Web Application Projects</mat-checkbox>
+        </div>
+        <div *ngIf="projectweb">
+          <div class="form-group col-xs-6">
+            <mat-checkbox
+              #prophp="ngModel"
+              name="prophp"
+              [(ngModel)]="userPrefs.prophp">
+            PHP</mat-checkbox>
+            <span class="pull-right">
+              <mat-checkbox 
+                labelPosition="before"
+                #projavascript="ngModel"
+                name="projavascript"
+                [(ngModel)]="userPrefs.projavascript">
+              JavaScript</mat-checkbox>
+            </span>
+          </div>
+          <div class="form-group col-xs-6">
+            <mat-checkbox
+              #prohtml5="ngModel"
+              name="prohtml5"
+              [(ngModel)]="userPrefs.prohtml5">
+            HTML5</mat-checkbox>
+            <span class="pull-right">
+              
+            </span>
+          </div>
+        </div>
+
+        <hr/>
+
+        <div class="form-group col-xs-6">
+          <mat-checkbox
+            #projectmobile="ngModel"
+            [(ngModel)]="userPrefs.projectmobile"
+            name="projectmobile">
+            Interested in  Mobile Application Development</mat-checkbox>
+        </div>
+          <div *ngIf="projectmobile">
+            <div class="form-group col-xs-6">
+              <mat-checkbox
+                #proandroid="ngModel"
+                name="proandroid"
+                [(ngModel)]="userPrefs.proandroid">
+              Android</mat-checkbox>
+              <span class="pull-right">
+                <mat-checkbox 
+                  labelPosition="before"
+                  #proios="ngModel"
+                  name="proios"
+                  [(ngModel)]="userPrefs.proios">
+                IOS</mat-checkbox>
+              </span>
+            </div> 
+            <div class="form-group col-xs-6">
+              <mat-checkbox
+                #prowindowsphone="ngModel"
+                name="prowindowsphone"
+                [(ngModel)]="userPrefs.prowindowsphone">
+              Windows Phone</mat-checkbox>
+              <span class="pull-right">
+                
+              </span>
+            </div>
+          </div>
+
+      </div>
+      
+    </div>
+    <button class="btn btn-info btn-sm">Update</button>
+  </form>
+
+  <form *ngIf="changepassword" #f="ngForm" (ngSubmit)="updatechangepassword(f)">
+    <div class="form-group">
+      <label>Old Password</label>
+      <input ngModel type="password" #oldpassword="ngModel" class="form-control" name="oldpassword" id="oldpassword" required>
+      <div class="alert alert-danger" *ngIf="oldpassword.touched && oldpassword.invalid">
+        Old Password is required
+      </div>
+    </div>
+  
+    <div class="form-group">
+      <label>Password</label>
+      <input ngModel type="password" #password="ngModel" class="form-control" name="password" id="password" required>
+      <div class="alert alert-danger" *ngIf="password.touched && password.invalid">
+        New Password is required
+      </div>
+    </div>
+  
+    <div class="form-group">
+      <label>Confirm New Password</label>
+      <input ngModel type="password" #confirmpassword="ngModel" class="form-control" name="confirmpassword" id="confirmpassword" [equalTo]="password">
+      <div class="alert alert-danger" *ngIf="confirmpassword.touched && confirmpassword.invalid">
+        Confirm password is wrong
+      </div>
+    </div>
+    <button class="btn btn-info">Update Password</button>
+  </form>
+
+  </div>
+
+  <div class="col-md-3">
+    <div class="card pull-right" style="width: 14rem;">
+      <ng-template #defaultimage>
+        <img class="card-img-top" src="/assets/images/defaultpicture.png" alt="{{ currentUser.username }}">
+        <input type="file" id="picture" name="picture" class="form-control" accept="image/*" (change)="getFilePicture($event)" ngModel #picture [hidden]="true">
+        <button type="button" class="btn btn-secondary" (click)="picture.click()">Upload Picture</button>
+      </ng-template>
+      <div *ngIf="currentUser.picture;else defaultimage" class="card-block">
+        <img class="card-img-top" src="{{ currentUser.picture }}" alt="{{ currentUser.username }}">    
+        <input type="file" id="picture" name="picture" class="form-control" accept="image/*" (change)="getFilePicture($event)" ngModel #picture [hidden]="true">
+        <button (click)="picture.click()" class="btn btn-secondary card-img-top">Update Picture</button>
+        <!--<input type="file" accept="image/*" [hidden]="true" #file>
+        <button (click)="file.click()">Upload file</button>-->
+      </div>
+    </div> 
+  </div>
+
+</div> 

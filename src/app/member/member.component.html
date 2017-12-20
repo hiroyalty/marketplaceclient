@@ -1,0 +1,57 @@
+
+  <div class="card">
+    <div class="card-header">
+      Personal Settings
+    </div>
+    <ul class="list-group list-group-flush">
+      <a class="list-group-item list-group-item-action"
+        (click)="activateProfile()"
+        [class.active]="profile"
+        [class.inactive]="!profile">Profile</a>
+      
+      <a class="list-group-item list-group-item-action"
+        
+        [class.active]="cv"
+        [class.inactive]="!cv">CV</a>
+
+      <a class="list-group-item list-group-item-action"
+        (click)="activateDatabase()"
+        [class.active]="database"
+        [class.inactive]="!database">Database</a>
+
+      <a class="list-group-item list-group-item-action"
+        (click)="activateProgramming()"
+        [class.active]="program"
+        [class.inactive]="!program">Programming</a>
+
+      <a class="list-group-item list-group-item-action"
+        (click)="activateWeb()"
+        [class.active]="web"
+        [class.inactive]="!web">Web Development</a>
+
+      <a class="list-group-item list-group-item-action"
+        (click)="activateMobile()"
+        [class.active]="mobile"
+        [class.inactive]="!mobile">Mobile Development</a>
+
+      <a class="list-group-item list-group-item-action"
+        (click)="activateNet()"
+        [class.active]="net"
+        [class.inactive]="!net">Networking | Operating System</a>
+
+      <a class="list-group-item list-group-item-action"
+        (click)="activateGames()"
+        [class.active]="games"
+        [class.inactive]="!games">Games | Devices</a>
+
+      <a class="list-group-item list-group-item-action"
+        (click)="activateProject()"
+        [class.active]="project"
+        [class.inactive]="!project">Project Interest</a>
+
+      <a class="list-group-item list-group-item-action"
+        (click)="activatePassword()"
+        [class.active]="password"
+        [class.inactive]="!password">Update Password</a>
+    </ul>
+  </div>

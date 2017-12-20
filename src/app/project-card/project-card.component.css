@@ -1,0 +1,16 @@
+  .card { 
+      margin-bottom: 30px;
+  }
+  
+  .card-img-top { 
+    height: 120px;
+  }
+  
+  .card-footer {
+    padding: 0;
+    background: #fff;
+  }
+
+  .btn {
+    cursor: pointer;
+  }

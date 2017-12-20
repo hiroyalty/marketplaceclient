@@ -1,0 +1,26 @@
+<div *ngIf="project.title" class="card">
+  <img class="card-img-top" *ngIf="project.imageUrl" src="{{ project.imageUrl }}" alt="{{ project.title }}">
+  <div class="card-body">
+    <h4 class="card-title">{{ project.title | titlecase }}</h4>
+    <p class="card-text">Project Duration: {{ project.projectlifespan }} Weeks</p>
+    <p class="card-text">Apply before: {{ formatdate }}</p>
+    <button class="btn btn-primary btn-sm" (click)="loadFullProject()">See More</button>
+  </div>
+  <!--
+    <div *ngIf="loggedIn && member" class="card-footer">
+    <button 
+      *ngIf="shoppingCart.getQuantity(project) === 0; else updateQuantity"
+      (click)="addToCart()"
+      class="btn btn-secondary btn-block">Apply for Project</button>
+    <ng-template #updateQuantity>
+      <project-quantity [project]="project" [shopping-cart]="shoppingCart">
+      </project-quantity>
+    </ng-template>
+    <a 
+      class="btn btn-primary btn-sm"
+      routerLink="['projectdetails', project._id]"
+      >
+      See More
+    </a>
+  </div>--> 
+</div>

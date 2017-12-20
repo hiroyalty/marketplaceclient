@@ -1,0 +1,17 @@
+.aa:focus{
+    outline: 0 !important;  
+}
+.active  {
+outline:0;
+color: #fff;
+border-color: #357ebd;
+}
+.my-drop-zone { border: dotted 3px lightgray; }
+.nv-file-over { border: dotted 3px red; } /* Default class applied to drop zones on over */
+.another-file-over-class { border: dotted 3px green; }
+.card {
+    margin-bottom: 20px;
+}
+.list-group-item {
+    cursor: pointer;
+}
