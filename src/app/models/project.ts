@@ -1,7 +1,9 @@
 export interface Project {
     _id: string;
     title: string;
+    introDescription: string;
     description: string;
+    diffilcultyLevel: string;
     projecttype: string;
     bigdataNoSQL: string;
     RelationalDB: string;
@@ -18,11 +20,13 @@ export interface Project {
     windowsphone: string;
     postedBy: {};
     category: string;
-    awardedTo: string;
-    applicantList: Array<{id: string}>;
+    awardedTo: {};
+    awardedToTeam: Array<{string}>;
+    //applicantsList: {};
+    applicantsList: Array<{string}>;
     numofapplicants: number;
     location: string;
-    offeredTo: string;
+    offeredTo: Array<{string}>;
     status: string;
     projectlifespan: string;
     url: string;

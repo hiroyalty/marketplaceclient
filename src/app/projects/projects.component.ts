@@ -13,15 +13,16 @@ export class ProjectsComponent implements OnInit {
   projects: Project[] = [];
   filteredProjects: Project[] = [];
   category: string;
+  stylesObj = {width: '15rem'};
 
   constructor(private route: ActivatedRoute, 
     private projectService: ProjectService,
     private projectCategoryService: ProjectCategoryService) { 
     
   }
-
+ 
   ngOnInit() {
-    this.projectService.getAll().subscribe(projects => {
+    this.projectService.getallFrontView().subscribe(projects => {
       this.projects = projects;
 
       this.route.queryParamMap.subscribe(params => {

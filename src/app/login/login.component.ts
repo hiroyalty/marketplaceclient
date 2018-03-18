@@ -44,8 +44,8 @@ export class LoginComponent implements OnInit {
         }
       },
         errorMessage => {
-          this.alertService.error(errorMessage);
-          this.notificationsService.notify("error", 'Login Error', errorMessage);
+          //this.alertService.error(errorMessage);
+          this.notificationsService.notify("error", 'Login Error', 'Incorrect Username and/or Password');
           this.errorMessage = <any>errorMessage;
         });
   }

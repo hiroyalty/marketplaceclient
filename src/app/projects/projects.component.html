@@ -6,7 +6,7 @@
     <div class="row">
       <ng-container *ngFor="let p of filteredProjects; let i = index">
         <div class="col">
-          <project-card [project]="p"></project-card>
+          <project-card [project]="p" [stylesObj]="stylesObj"></project-card>
         </div>
         <div *ngIf="(i + 1) % 4 === 0" class="w-100"></div>
       </ng-container>

@@ -16,5 +16,5 @@ export class AdminAuthGuard implements CanActivate {
     this.router.navigate(['/no-access']);
     return false;
   }
-
+ 
 }

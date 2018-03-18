@@ -1,0 +1,14 @@
+.leftspace{
+    padding-left: 15px;
+}
+.toppad {
+    padding-top: 25px;
+    clear: both;
+}
+
+.rightpad {
+    padding-right: 10px;
+}
+.leftpad {
+    padding-left: 10px;
+}

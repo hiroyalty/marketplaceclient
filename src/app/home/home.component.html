@@ -1,16 +1,25 @@
 <!-- Main jumbotron for a primary marketing message or call to action 
-<p-growl [value]="getMessages()"></p-growl> -->
-<div class="jumbotron">
-<div class="container">
-  <h1 class="display-3">Market Place!</h1>
-  <p>Get the much needed experience today, Sign up and get to work on live projects.</p>
-  <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
+<p-growl [value]="getMessages()"></p-growl>
+<div *ngIf="banner" class="bg"></div>
+[ngStyle]="{ 'background-image': url(imageLinkk), 'background-size': cover, 'background-repeat': repeat}" -->
+<div *ngIf="banner" class="jumbotron" [style.background-image]="getBackground(imageLinkk)">
+  <div class="container">
+    <h1 class="display-3">{{ banner?.btitle }}</h1>
+    <p>{{ banner?.bdescription }}</p>
+    <p><a class="btn btn-primary btn-sm" routerLink="/signup" role="button">Get Started</a></p>
+  </div>
 </div>
+<div *ngIf="!banner" class="jumbotron jumboHeadernoImg">
+  <div class="container">
+    <h1 class="display-3">Market Place</h1>
+    <p>Get the much needed experience today, Sign up and get to work on live projects.</p>
+    <p><a class="btn btn-primary btn-sm" routerLink="/signup" role="button">Get Started</a></p>
+  </div>
 </div>
-
+ 
 <div class="container">
   <app-projects></app-projects>
-<!-- Example row of columns 
+<!-- Example row of columns
 <div class="row">
   <div class="col-md-4">
   <h2>Heading</h2>

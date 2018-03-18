@@ -1,9 +1,11 @@
+import { Banner } from './../models/banner';
+import { BannerService } from './../services/banner.service';
 import { ProjectCategory } from './../models/project-category';
 import { ValidationManager } from 'ng2-validation-manager';
 import { NotificationsService } from './../services/notifications.service';
 import { ProjectCategoryService } from '../services/projectcategory.service';
 import { UsercategoryService } from './../services/usercategory.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { Usercategory } from 'app/models/usercategory';
 import { FormArray, FormBuilder, FormGroup, NgForm } from '@angular/forms';
 
@@ -16,18 +18,31 @@ export class AdminComponent implements OnInit {
   ucategories: Usercategory[];
   pcategories: ProjectCategory[];
   projectcategory: ProjectCategory;
+  banner : any = {};
   form;
   usercategory = {};
   errorMessage: string;
   constructor(
     private userCategoryService: UsercategoryService,
     private projectCategoryService: ProjectCategoryService,
-    private notificationsService: NotificationsService) {
+    private bannerService: BannerService,
+    private notificationsService: NotificationsService,
+    private zone: NgZone) {
       this.userCategoryService.getAll()
       .subscribe(ucategories => this.ucategories = ucategories);
 
-    this.projectCategoryService.getAll()
-      .subscribe(pcategories => this.pcategories = pcategories);
+      this.projectCategoryService.getAll()
+        .subscribe(pcategories => this.pcategories = pcategories);
+
+      this.bannerService.getBanner()
+        .subscribe(dat => {
+          this.banner = dat;
+          //console.log(this.banner)
+        },
+        errorMessage => { 
+          //this.notificationsService.notify("error", 'Deletion Failed', 'Project Deletion Failed');
+          this.errorMessage = <any>errorMessage;
+        });
   }
 
   //here we manage both user and project category.
@@ -41,6 +56,97 @@ export class AdminComponent implements OnInit {
         })
       ],
     });
+  } 
+/*  
+  Banner Part
+*/
+  createBanner(fbb: NgForm) {
+    let mainbanner = fbb.value;
+    this.bannerService.create(mainbanner)
+      .subscribe(data => {
+        this.banner = data;
+        
+        this.notificationsService.notify("success", 'Banner Created', 
+          'A new Front Banner has been Created');
+      },
+      errorMessage => { 
+        this.notificationsService.notify("error", 'Operation Failed', 'Front Banner Creation Failed');
+        this.errorMessage = <any>errorMessage
+      });
+      //fbb.reset();
+  }
+
+  updateBanner(fbb: NgForm) {
+    let mainbanner = fbb.value;
+    this.bannerService.update(this.banner._id, mainbanner)
+      .subscribe(data => {
+        this.banner = data;
+        
+        this.notificationsService.notify("success", 'Banner Updated', 
+          'Front Banner has been Updated');
+      },
+      errorMessage => { 
+        this.notificationsService.notify("error", 'Operation Failed', 'Front Banner Update Failed');
+        this.errorMessage = <any>errorMessage
+      });
+      //fbb.reset();
+  }
+
+  getFileImageLink(event) {
+    let picturerr = event.target.files[0];
+    if(event.target.files.length > 0) {
+      picturerr = event.target.files[0];
+      //console.log(picturerr);
+      let formData = new FormData();
+      formData.append('imageLink', picturerr);
+      this.bannerService.uploadImage(this.banner.btitle, formData)
+        .subscribe(data => {
+          //this.banner = data;
+          //this.refreshBannerDetails();
+          this.notificationsService.notify("success", 'Update Successful', 
+          'Picture Update Successful');
+        },
+        errorMessage => { 
+          this.notificationsService.notify("error", 'Upload Failed', 'Your Upload Failed');
+          this.errorMessage = <any>errorMessage
+        });
+    }
+  }
+ 
+  updateFileImageLink(event) {
+    let dfile = this.banner.imageLink.split("/");
+    let filename = dfile[5];
+
+    let picturerr = event.target.files[0];
+    if(event.target.files.length > 0) {
+      picturerr = event.target.files[0];
+      //console.log(picturerr);
+      let formData = new FormData();
+      formData.append('imageLink', picturerr);
+      this.bannerService.updateImage(this.banner.btitle, filename, formData)
+        .subscribe(data => {
+          //this.banner = data;
+          //this.refreshBannerDetails();
+          this.notificationsService.notify("success", 'Update Successful', 
+          'Picture Update Successful');
+        },
+        errorMessage => { 
+          this.notificationsService.notify("error", 'Upload Failed', 'Your Upload Failed');
+          this.errorMessage = <any>errorMessage
+        });
+    }
+  }
+
+  refreshBannerDetails() {
+    this.bannerService.getBanner()
+      .subscribe(data => {
+        this.zone.run(() => {
+          //this.banner = JSON.stringify(data);
+          this.banner = data;
+        })
+      },
+      errorMessage => { 
+      });
   }
 
   createUserCategory(f: NgForm) {

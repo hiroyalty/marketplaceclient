@@ -10,11 +10,12 @@ import * as moment from 'moment';
 })
 export class ProjectCardComponent implements OnInit {
   @Input('project') project: Project;
-  id;
+  @Input() stylesObj: any = {};
+  id; 
   formatdate;
   //@Input('show-actions') showActions = true;
   //@Input('shopping-cart') projectCart: ShoppingCart;
-
+ 
   //private cartService: ShoppingCartService
   constructor(private router: Router) { 
     //let aday = moment(this.project.applicationdeadline);
@@ -32,7 +33,7 @@ export class ProjectCardComponent implements OnInit {
   }
 
   loadFullProject() {
-    console.log(this.id);
-    //this.router.navigate(['/projectdetails/id']);
+    //console.log(this.id);
+    this.router.navigate(['/projectdetails/'+ this.id]);
   }
 } 

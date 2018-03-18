@@ -40,15 +40,20 @@
     <div class="col-md-4">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/aboutteams">
-          Market for Team
-          </a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" routerLink="/aboutemployers">
           Become an Employer
           </a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/aboutus">
+          About Us
+          </a>
+        </li>
+        <!--<li class="nav-item">
+          <a class="nav-link" routerLink="/contact">
+          Contact Us
+          </a>
+        </li>-->
         <ng-template #anonymousUser>
         <li class="nav-item">
           <a *ngIf="!isLoggedIn()" class="nav-link" routerLink="/login">Login</a>
@@ -73,20 +78,28 @@
           </a>
           
           <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdown01">
-            <a class="dropdown-item" routerLink="/my/messages">My Messages</a>
+            <!--<a class="dropdown-item" routerLink="/my/messages">New Messages</a> -->
             <ng-container *ngIf="isLoggedIn() && checkUserRole('admin')" class="">
               <a class="dropdown-item" routerLink="/admin">Admin Operations</a>
+              <a class="dropdown-item" routerLink="/admin/mysettings">My Settings</a>
               <a class="dropdown-item" routerLink="/admin/manage-users">Manage Users</a>
-              <a class="dropdown-item" routerLink="/admin/projects">Manage Projects</a>
+              <a class="dropdown-item" routerLink="/admin/myprojects">My Projects</a>
+              <a class="dropdown-item" routerLink="/admin/projects">Other Projects</a>
+              <a class="dropdown-item" routerLink="/admin/profile">Profile</a>
+              <a class="dropdown-item" routerLink="/admin/help">help</a>
             </ng-container>
             <ng-container *ngIf="isLoggedIn() && checkUserRole('employer')" class="">
               <a class="dropdown-item" routerLink="/employer/myprojects">My Projects</a>
+              <a class="dropdown-item" routerLink="/employer/mysettings">My Settings</a>
+              <a class="dropdown-item" routerLink="/employer/profile">Profile</a>
+              <a class="dropdown-item" routerLink="/employer/help">help</a>
             </ng-container>
             <ng-container *ngIf="isLoggedIn() && checkUserRole('member')" class="">
               <a class="dropdown-item" routerLink="/mem/myprojects">My Projects</a>
               <a class="dropdown-item" routerLink="/mem/mysettings">My Settings</a>
+              <a class="dropdown-item" routerLink="/profile">Profile</a>
+              <a class="dropdown-item" routerLink="/mem/help">help</a>
             </ng-container>
-            <a class="dropdown-item" routerLink="/help">help</a>
             <a class="dropdown-item" *ngIf="isLoggedIn()" (click)="logout()">Log Out</a>
           </div>
         </li>

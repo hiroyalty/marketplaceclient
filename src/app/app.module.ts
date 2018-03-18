@@ -1,3 +1,7 @@
+import { CommentService } from './services/comment.service';
+import { BannerService } from './services/banner.service';
+import { UserStatusService } from './services/user-status.service';
+import { AdminEmployerGuard } from './services/admin-employer-guard.service';
 import { ProjectStatusService } from './services/project-status.service';
 import { ProjectService } from './services/project.service';
 import { EnumDataService } from './services/enum-data.service';
@@ -18,7 +22,9 @@ import { RouterModule } from '@angular/router';
 import { DataTableModule } from 'angular-4-data-table/dist';
 import { CustomFormsModule } from 'ng2-validation';
 import { AuthConfig, AuthHttp } from 'angular2-jwt';
-
+import { CommonModule } from '@angular/common';
+//import { MomentModule } from 'angular2-moment';
+ 
 import { AdminComponent } from './admin/admin.component';
 import { AppComponent } from './app.component';
 import { EmployerComponent } from './employer/employer.component';
@@ -49,8 +55,15 @@ import { MemberAuthGuard } from 'app/services/member-auth-guard.service';
 import { ProjectInterestComponent } from './member/settings/project-interest/project-interest.component';
 import { ProjectFormComponent } from './employer/project-form/project-form.component';
 import { ProjectCardComponent } from './project-card/project-card.component';
-import { ProjectsComponent } from './projects/projects.component';
 import { ProjectDetailsComponent } from './project-details/project-details.component';
+import { ProfileComponent } from './profile/profile.component';
+import { ManageProjectsComponent } from './admin/manage-projects/manage-projects.component';
+import { ProjectsComponent } from 'app/projects/projects.component';
+import { CreateProjectComponent } from './create-project/create-project.component';
+import { AboutusComponent } from './aboutus/aboutus.component';
+import { AboutEmployersComponent } from './about-employers/about-employers.component';
+import { FromNowPipe } from './pipes/from-now.pipe';
+import { CommentComponent } from './comment/comment.component';
 
 export function getAuthHttp(http) {
   return new AuthHttp(new AuthConfig({
@@ -82,8 +95,15 @@ export function getAuthHttp(http) {
     ProjectInterestComponent,
     ProjectFormComponent,
     ProjectCardComponent,
+    ProjectDetailsComponent,
+    ProfileComponent,
     ProjectsComponent,
-    ProjectDetailsComponent
+    ManageProjectsComponent,
+    CreateProjectComponent,
+    AboutusComponent,
+    AboutEmployersComponent,
+    FromNowPipe,
+    CommentComponent
   ],
   imports: [
     BrowserModule,
@@ -92,6 +112,8 @@ export function getAuthHttp(http) {
     HttpModule,
     NgbModule.forRoot(),
     GrowlModule,
+    CommonModule,
+    //MomentModule,
     SharedModule,
     MessagesModule,
     DataTableModule,
@@ -112,6 +134,32 @@ export function getAuthHttp(http) {
       component: EditUserComponent, 
       canActivate: [AuthGuard, AdminAuthGuard] 
       },
+      { 
+        path: 'admin/edit-project/:id', 
+        component: ProjectFormComponent, 
+        canActivate: [AuthGuard, AdminAuthGuard]
+      },
+      { path: 'admin/profile', 
+      component: ProfileComponent, 
+      canActivate: [AuthGuard, AdminAuthGuard] 
+      },
+      { path: 'admin/projects', 
+      component: ManageProjectsComponent, 
+      canActivate: [AuthGuard, AdminAuthGuard] 
+      },
+      { path: 'admin/myprojects', 
+      component: ManageProjectsComponent, 
+      canActivate: [AuthGuard, AdminAuthGuard] 
+      },
+      { path: 'admin/mysettings', 
+      component: SettingsComponent, 
+      canActivate: [AuthGuard, AdminAuthGuard]
+      },
+      { 
+        path: 'admin/projects/new', 
+        component: CreateProjectComponent, 
+        canActivate: [AuthGuard, AdminAuthGuard]
+      },
       { path: 'admin', 
         component: AdminComponent, 
         canActivate: [AuthGuard, AdminAuthGuard] 
@@ -120,32 +168,55 @@ export function getAuthHttp(http) {
       component: EmployerComponent, 
       canActivate: [AuthGuard, EmployerAuthGuard] 
       },
+      { path: 'employer/mysettings', 
+      component: SettingsComponent, 
+      canActivate: [AuthGuard] 
+      },
       { 
         path: 'employer/projects/new', 
-        component: ProjectFormComponent, 
+        component: CreateProjectComponent, 
         canActivate: [AuthGuard, EmployerAuthGuard]
+      },
+      { path: 'employer/profile', 
+      component: ProfileComponent, 
+      canActivate: [AuthGuard] 
       },
       { 
         path: 'employer/edit-project/:id', 
         component: ProjectFormComponent, 
         canActivate: [AuthGuard, EmployerAuthGuard]
       },
-      { path: 'mem/mysettings', 
-      component: SettingsComponent, 
-      canActivate: [AuthGuard, MemberAuthGuard] 
-      }, 
-      { path: 'mem/project-settings', 
-      component: ProjectInterestComponent, 
+      { path: 'mem/myprojects', 
+      component: MemberComponent, 
       canActivate: [AuthGuard, MemberAuthGuard] 
       },
+      { path: 'mem/mysettings', 
+      component: SettingsComponent, 
+      canActivate: [AuthGuard] 
+      },
+      { 
+        path: 'mem/edit-project/:id', 
+        component: ProjectFormComponent, 
+        canActivate: [AuthGuard, MemberAuthGuard]
+      },
+      { path: 'profile/:id', 
+      component: ProfileComponent, 
+      canActivate: [AuthGuard, AdminEmployerGuard] //make a auth guard for employer and admin
+      },
+      { path: 'profile', 
+      component: ProfileComponent, 
+      canActivate: [AuthGuard] 
+      }, 
       { path: 'login', component: LoginComponent },
+      { path: 'signup/:role', component: SignupComponent },
       { path: 'signup', component: SignupComponent },
       { path: 'confirmaccount/:category/:username', component: ConfirmAccountComponent },
       { path: 'forgotpassword', component: ForgotPasswordComponent },
       { path: 'resetpassword/:utoken', component: ResetPasswordComponent },
       { path: 'projectdetails/:id', component: ProjectDetailsComponent},
-      //{ path: 'aboutteams', component: LoginComponent },
-      //{ path: 'aboutemployers', component: LoginComponent },
+      { path: 'aboutus', component: AboutusComponent },
+      { path: 'aboutemployers', component: AboutEmployersComponent },
+      { path: 'comment', component: CommentComponent },
       { path: 'no-access', component: NoAccessComponent },
       {
         path: '**', 
@@ -160,14 +231,18 @@ export function getAuthHttp(http) {
     UserService,
     ProjectService,
     AdminAuthGuard,
+    AdminEmployerGuard ,
     EmployerAuthGuard,
     MemberAuthGuard,
     NotificationsService,
     AlertService,
     EnumDataService,
+    UserStatusService,
     ProjectStatusService,
     UsercategoryService,
     ProjectCategoryService,
+    BannerService,
+    CommentService,
     AuthHttp,
     {
       provide: AuthHttp,

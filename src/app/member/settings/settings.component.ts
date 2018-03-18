@@ -18,6 +18,12 @@ import { Component, OnInit, NgZone } from '@angular/core';
 export class SettingsComponent implements OnInit {
   currentUser: AppUser;
   userId: string;
+
+  adminUserRole;
+  employerUserRole;
+  memberOrUserRole;
+  employerOrUserRole;
+
   enumVal;
   errorMessage: string;
   listProfile;
@@ -25,17 +31,21 @@ export class SettingsComponent implements OnInit {
   userPrefs: InterestedProject;
   cvupload;
   coverletterupload;
+  companycertificateupload;
   usercv;
   usercoverletter;
+  usercompanycertificate;
   userFileLink = 'https://localhost:3000/userfiles/';
+
   /* from profile to games*/
   profile: boolean; 
   cv: boolean; database: boolean; program: boolean;
-  web: boolean; mobile: boolean; net: boolean; games: boolean;
+  web: boolean; mobile: boolean; net: boolean; games: boolean; CompanyDetails: boolean;
   project: boolean; changepassword: boolean;
   coverletteruploadbutton: boolean;
   cvuploadbutton: boolean;
-
+  companycertificateuploadbutton: boolean = false;
+  
   
   projectpref;
   /* Project Part Ends here */
@@ -52,11 +62,17 @@ export class SettingsComponent implements OnInit {
     this.currentUser = this.authService.currentUser;
     this.userPrefs = this.authService.userPrefs;
 
+    this.adminUserRole = this.authService.userRole('admin');
+    this.employerUserRole = this.authService.userRole('employer');
+    this.memberOrUserRole = this.authService.checkTwoRoles('user', 'member');
+    this.employerOrUserRole = this.authService.checkTwoRoles('user', 'employer');
+
     /* from profile to games*/
     this.profile = true; this.cv = false;
     this.database = false; this.project= false; this.changepassword= false;
     this.program= false; this.web= false; this.mobile= false; this.net= false; 
     this.games = false; this.coverletteruploadbutton = false; this.cvuploadbutton = false;
+    this.CompanyDetails = false;
   }
 
   ngOnInit() {
@@ -75,7 +91,7 @@ export class SettingsComponent implements OnInit {
         this.zone.run(() => {
           let men = JSON.stringify(data);
 
-          sessionStorage.setItem('currentUser', (men));
+          localStorage.setItem('currentUser', (men));
           this.currentUser = this.authService.currentUser;
           //console.log(JSON.stringify(data));
         this.notificationsService.notify("success", 'Update Successful', 
@@ -157,6 +173,11 @@ export class SettingsComponent implements OnInit {
     this.project = true;
   }
 
+  activateCompanyDetails() {
+    this.allFalse();
+    this.CompanyDetails = true;
+  }
+
   activatechangepassword() {
     this.allFalse();
     this.changepassword = true;
@@ -165,7 +186,7 @@ export class SettingsComponent implements OnInit {
   allFalse() {
     this.database = false; this.project= false; this.changepassword= false; this.profile = false;
     this.program= false; this.web= false; this.mobile= false; this.net= false; this.games = false;
-    this.cv = false;
+    this.cv = false; this.CompanyDetails = false;
   }
 
   updatechangepassword(f: NgForm) {
@@ -199,6 +220,16 @@ export class SettingsComponent implements OnInit {
       //this.form.get('avatar').setValue(file);
     }
     this.coverletteruploadbutton = true;
+  }
+
+  getCompanyCert(event) {
+    //console.log(event.target.files[0]);
+    this.companycertificateupload = event.target.files[0];
+    if(event.target.files.length > 0) {
+      this.companycertificateupload = event.target.files[0];
+      //this.form.get('avatar').setValue(file);
+    }
+    this.companycertificateuploadbutton = true;
   }
 
   getFilePicture(event) {
@@ -243,7 +274,7 @@ export class SettingsComponent implements OnInit {
       this.errorMessage = <any>errorMessage
     });
   }
-
+  
   uploadCoverletter(fmr: NgForm) {
     //console.log(this.cvupload);
     let formData = new FormData();
@@ -266,16 +297,42 @@ export class SettingsComponent implements OnInit {
     });
   }
 
+  uploadcompanycertificate(fmr: NgForm) {
+    //console.log(this.cvupload);
+    let formData = new FormData();
+    formData.append('companycertificate', this.companycertificateupload);
+    this.userService.uploadCompanyCertificate(formData)
+    .subscribe(data => {
+      fmr.reset();
+      //this.zone.run(() => {
+        //let men = JSON.stringify(data);
+
+        //sessionStorage.setItem('currentUser', (men));
+        //this.currentUser = this.authService.currentUser;
+      this.notificationsService.notify("success", 'Update Successful', 
+        'Conmpany certificate Successfully uploaded');
+      //})
+    },
+    errorMessage => { 
+      this.notificationsService.notify("error", 'Upload Failed', 'Your Upload Failed');
+      this.errorMessage = <any>errorMessage
+    });
+  }
+
   refreshUserDetails() {
     this.userService.getUser(this.currentUser._id)
       .subscribe(data => {
         this.zone.run(() => {
           let men = JSON.stringify(data);
 
-          sessionStorage.setItem('currentUser', (men));
+          localStorage.setItem('currentUser', (men));
           this.currentUser = this.authService.currentUser;
-          this.usercv = this.currentUser.cv;
-          this.usercoverletter = this.currentUser.coverletter;
+          if(this.memberOrUserRole) {
+            this.usercv = this.currentUser.cv;
+            this.usercoverletter = this.currentUser.coverletter;
+          } else {
+            this.usercompanycertificate = this.currentUser.companycertificate;
+          }
         })
       },
       errorMessage => { 
@@ -302,4 +359,4 @@ export class SettingsComponent implements OnInit {
       });
   }
 
-}
+} 

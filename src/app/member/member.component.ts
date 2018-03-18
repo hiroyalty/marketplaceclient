@@ -1,9 +1,13 @@
+import { DataTableResource } from 'angular-4-data-table';
+import { Subscription } from 'rxjs/Subscription';
+import { Project } from './../models/project';
 import { AuthService } from './../services/auth.service';
 import { UserService } from 'app/services/user.service';
 import { NotificationsService } from './../services/notifications.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AppUser } from 'app/models/app-user';
 import { Component, OnInit, NgZone, Input } from '@angular/core';
+import { ProjectService } from '../services/project.service';
 
 @Component({
   selector: 'member',
@@ -11,136 +15,85 @@ import { Component, OnInit, NgZone, Input } from '@angular/core';
   styleUrls: ['./member.component.css']
 })
 export class MemberComponent implements OnInit {
-  /*@Input() profile: boolean;
-  @Input() cv: boolean; 
-  @Input() database: boolean; 
-  @Input() program: boolean;
-  @Input() web: boolean;
-  @Input() mobile: boolean; 
-  @Input() net: boolean; 
-  @Input() games: boolean;
-  @Input() project: boolean; 
-  @Input() password: boolean;*/
-  currentUser: AppUser;
-  userId: string;
-
-  /* from profile to games*/
-  profile: boolean; 
-  cv: boolean; database: boolean; program: boolean;
-  web: boolean; mobile: boolean; net: boolean; games: boolean;
-  project: boolean; password: boolean;
-
-  errorMessage: string;
-
+  projects: Project[];
+  subscription: Subscription;
+  tableResource: DataTableResource<Project>;
+  items: Project[] = [];
+  itemCount: number;
+  errorMessage;
+  
   constructor(
     private router: Router, // for navigation
     private route: ActivatedRoute, //to be able to read route parameters.
     private notificationsService: NotificationsService,
+    private projectService: ProjectService,
     private userService: UserService,
     private authService: AuthService,
     private zone: NgZone
   ) {
-    /* from profile to games*
-    
-    this.cv = false;
-    this.database = false; this.project= false; this.password= false;
-    this.program= false; this.web= false; this.mobile= false; this.net= false; 
-    this.games = false;
+    this.subscription = this.projectService.getAllMemberProjects()
+    .subscribe(projects => {
+      this.projects = projects;
+      this.initializeTable(projects);
+    });
+}
 
-    /*this.listProfile = ([
-      this.database = false, this.project= false, this.password= false, this.profile = true,
-      this.program= false, this.web= false, this.mobile= false, this.net= false, this.games = false
-    ]);*/
-   }
-
-  ngOnInit() {
+private initializeTable(projects: Project[]) {
+  if(projects.length > 0) {
+  this.tableResource = new DataTableResource(projects);
+  this.tableResource.query({ offset: 0 })
+    .then(items => this.items = items);
+  this.tableResource.count()
+    .then(count => this.itemCount = count);
   }
+}
 
-  /* from profile to games 
-  activateProfile() {
-    this.allFalse();
-    if (!this.profile) {
-      this.profile = !this.profile;
-    }
-    //console.log('profile is true');
-  }
+reloadItems(params) {
+  if(!this.tableResource) return;
 
-  activateCV() {
-    this.allFalse();
-    this.cv = !this.cv;
-    //console.log('profile is false');
-  }
+  this.tableResource.query(params)
+  .then(items => this.items = items);
+}
 
-  activateDatabase() {
-    this.allFalse();
-    this.database = !this.database;
-  }
+filter(query: string) {
+  let filteredProjects = (query) ?
+    this.projects.filter(p => p.title.toLowerCase().includes(query.toLowerCase())) :
+    this.projects;
 
-  activateProgramming() {
-    this.allFalse();
-    this.program = !this.program;
-  }
+  this.initializeTable(filteredProjects);
+}
+//3 ways of dealing with our objects are:
+//1. declare an observable in component and use async pipe to unwrap on the template.
+//2. take one operator on the observable and just display it on the template
+//3. use the subscription object and unsubscribe when we done.
+ngOnDestroy(): void {
+  this.subscription.unsubscribe();
+}
+ 
+refreshProjects(){
+  this.subscription = this.projectService.getAllMemberProjects()
+    .subscribe(projects => {
+      this.projects = projects;
+      this.initializeTable(projects);
+  });
+}
 
-  activateWeb() {
-    this.allFalse();
-    this.web = !this.web;
-  }
+deleteProject(item) {
+  console.log(item);
+  //this.projects.splice()
+  this.projectService.deleteProject(item._id, item.postedBy.username)
+   .subscribe(dat => {
+    this.notificationsService.notify("success", 'Deletion Successful', 
+    'Project Deletion Successful');
+  },
+  errorMessage => { 
+    this.notificationsService.notify("error", 'Deletion Failed', 'Project Deletion Failed');
+    this.errorMessage = <any>errorMessage;
+  });
+  this.refreshProjects();
+}
 
-  activateMobile() {
-    this.allFalse();
-    this.mobile = !this.mobile;
-  }
-
-  activateNet() {
-    this.allFalse();
-    this.net = !this.net;
-  }
-
-  activateGames() {
-    this.allFalse();
-    this.games = !this.games;
-  }
-
-  activateProject() {
-    this.allFalse();
-    this.project = true;
-    this.router.navigate(['/mem/project-settings']);
-  }
-
-  activatePassword() {
-    this.allFalse();
-    this.password = !this.password;
-  }
-
-  allFalse() {
-    /*for (let entry of this.listProfile) {
-      entry = false;
-      console.log(entry);
-    }
-    this.database = this.database; 
-    this.project = this.project; 
-    this.password = this.password; 
-    this.profile = this.profile;
-    this.program = this.program; 
-    this.web = this.web; 
-    this.mobile = this.mobile; 
-    this.net = this.net; 
-    this.games = this.games;
-    this.cv = this.cv; 
-    this.database = false; 
-    this.project = false; 
-    this.password = false; 
-    this.profile = false;
-    this.program = false; 
-    this.web = false; 
-    this.mobile = false; 
-    this.net = false; 
-    this.games = false;
-    this.cv = false;
-} 
-
-  /*
-    File upload functions 
-  */ 
-
+ngOnInit() {
+}
+  
 }

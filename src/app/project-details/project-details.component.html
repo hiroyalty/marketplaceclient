@@ -1,3 +1,218 @@
-<p>
-  project-details works!
-</p>
+<!-- Main jumbotron for a primary marketing message or call to action 
+  #b48484#b88rosybrown
+-->
+<!-- display-3
+<div class="row" style="background-color: #334;">
+  <div class="card w-75" style="background-color: #334; border-color: #334;">
+    <div class="card-block">
+      <h1 class="card-title">{{ project?.title | titlecase }}</h1>
+      <h5 class="card-text">{{ project?.introDescription }}</h5>
+      <p></p>
+      <span class="card-text sizing">Category {{ project?.category }}</span>
+      <span class="card-text sizing">{{ project?.numofapplicants}} members applied</span>
+      <span class="card-text sizing">Duration {{ project?.projectlifespan}} weeks</span>
+      <p></p>
+      <span class="badge badge-pill badge-success">Posted By</span>
+      <span class="card-text sizing">{{ project?.postedBy?.username }}</span>
+      <span class="card-text">Apply before: {{ formatdate }}</span>
+      <span class="card-text">Location: {{ project?.location }}</span>
+      <p></p>
+      <span class="card-text">Level: {{ project?.diffilcultyLevel }}</span>
+      <p></p>
+      <a class="btn btn-primary btn-sm" role="button">Apply for Project &raquo;</a>
+    </div>
+  </div>
+  <div class="card w-25" style="background-color: #334; border-color: #334;">
+    <img class="card-img-top" src="{{ project?.imageUrl }}" alt="{{ project?.title }}">
+  </div>
+</div>
+-->
+<div style="background-color: #334;">
+  <div class="jumbotron jumbotron-fluid myJumbotron">
+    <div class="row">
+      <div class="col-8">
+        <h1 class="card-title mycard-title">{{ project?.title | titlecase }}</h1>
+        <p class="lead">{{ project?.introDescription }}</p>
+        <span class="card-text mycard-text sizing">Category {{ project?.category }}</span>
+        <span class="card-text mycard-text sizing">{{ project?.numofapplicants}} members applied</span>
+        <span class="card-text mycard-text sizing">Duration {{ project?.projectlifespan}} weeks</span>
+        <p></p>
+        <span class="badge badge-pill badge-success">Posted By</span>
+        <span class="card-text mycard-text sizing">{{ project?.postedBy?.username }}</span>
+        <span class="card-text mycard-text">Apply before: {{ formatdate }}</span>
+        <span class="card-text mycard-text">Location: {{ project?.location }}</span>
+        <p></p>
+        <span class="card-text mycard-text">Level: {{ project?.diffilcultyLevel }}</span>
+        <p></p>
+        <a class="btn btn-primary btn-sm mybtn" role="button" (click)="applyforproject()">Apply for Project &raquo;</a>
+      </div>
+      <div class="col-4">
+        <img class="placed" src="{{ project?.imageUrl }}" alt="{{ project?.title }}">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-8">
+      <div class="card">
+        <h4 class="card-header">
+          Project Description
+        </h4>
+        <div class="card-block">
+          <p class="card-text mycard-text" style="white-space: pre-line">
+            {{ project?.description }}
+          </p>
+        </div>
+      </div>
+      <div class="spaced"></div>
+      <ngb-accordion activeIds="ngb-panel-0" #acc="ngbAccordion">
+        <!--<ngb-panel title="Description">
+          <ng-template ngbPanelContent>
+            <span style="white-space: pre-line">{{ project?.description }}</span>
+          </ng-template>
+        </ngb-panel> -->
+        <ngb-panel>
+          <ng-template ngbPanelTitle>
+            <span style="color:black"><h4>Skill Requirement</h4></span>
+          </ng-template>
+          <ng-template ngbPanelContent>
+            <div class="card card-default">
+              <div class="card-header">
+                <span>Match your Skill</span>
+                <span class="pull-right" >
+                  <i class="fa fa-thumb-tack" aria-hidden="true"></i>
+                </span>
+              </div>
+              <div class="card-body">
+                <div class="form-group col-xs-6">
+                  <label for="bigdataNoSQL">bigdataNoSQL</label>
+                  <label id="bigdataNoSQL" class="form-control">
+                    {{ project.bigdataNoSQL }}
+                  </label>
+                </div>
+                <div class="form-group col-xs-6">
+                  <label for="RelationalDB">RelationalDB</label>
+                  <label id="RelationalDB" class="form-control">
+                    {{ project.RelationalDB }}
+                  </label>
+                </div>
+                <div class="form-group col-xs-6">
+                  <label for="programming">Programming</label>
+                  <label id="programming" class="form-control">
+                    {{ project.programming }}
+                  </label>
+                </div>
+                <div class="form-group col-xs-6">
+                  <label for="webdevelopment">Web Development</label>
+                  <label id="webdevelopment" class="form-control">
+                    {{ project.webdevelopment }}
+                  </label>
+                </div>
+                <div class="form-group col-xs-6">
+                  <label for="networking">Networking</label>
+                  <label id="networking" class="form-control">
+                    {{ project.networking }}
+                  </label>
+                </div>
+                <div class="form-group col-xs-6">
+                  <label for="cloudcomputing">Cloud Computing</label>
+                  <label id="cloudcomputing" class="form-control">
+                    {{ project.cloudcomputing }}
+                  </label>
+                </div>
+                <div class="form-group col-xs-6">
+                  <label for="operatingsystem">Operating System</label>
+                  <label id="operatingsystem" class="form-control">
+                    {{ project.operatingsystem }}
+                  </label>
+                </div>
+                <div class="form-group col-xs-6">
+                  <label for="games">Games</label>
+                  <label id="games" class="form-control">
+                    {{ project.games }}
+                  </label>
+                </div>
+                <div class="form-group col-xs-6">
+                  <label for="devices">Devices</label>
+                  <label id="devices" class="form-control">
+                    {{ project.devices }}
+                  </label>
+                </div>
+                <div class="form-group col-xs-6">
+                  <label for="android">Android</label>
+                  <label id="android" class="form-control">
+                    {{ project.android }}
+                  </label>
+                </div>
+                <div class="form-group col-xs-6">
+                  <label for="ios">IOS</label>
+                  <label id="ios" class="form-control">
+                    {{ project.ios }}
+                  </label>
+                </div>
+                <div class="form-group col-xs-6">
+                  <label for="windowsphone">Windows Phone</label>
+                  <label id="windowsphone" class="form-control">
+                    {{ project.windowsphone }}
+                  </label>
+                </div>
+              </div> 
+            </div> 
+          </ng-template>
+        </ngb-panel>
+      </ngb-accordion>
+      <div class="spaced"></div>
+      <div class="card">
+        <h5 class="card-header">
+          Project Additional Documents
+        </h5>
+        <div class="card-block">
+          <p class="card-text mycard-text">For more accurate understanding of this Project.</p> 
+          <p class="card-text othercard-text">Click on each link to download each document.</p>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>File Name</th>
+                <th>Download</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="projectdocs">
+                <tr *ngFor="let filename of projectdocs">
+                  <th scope="row">#</th>
+                  <td>File</td>
+                  <td><a href="{{filename}}" download="projectdoc">
+                    <img src="assets/images/file-icon.png" width="30" height="30">
+                  </a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!--<div class="card"> assets/images/defaultpicture.png
+        <div class="card-block"> {{ project.postedBy?.picture }}
+          <h4 class="card-title mycard-title">About the employer</h4>
+          <p class="card-text mycard-text"></p>
+        </div> style='float:left;width:200px;height:200px; margin-right:10px;'
+      </div> -->
+      <h4 class="newspace">About the employer</h4>
+      <div class="circle-shape-example">
+        <img src="{{ project.postedBy?.picture }}" alt="employers picture" class="curve" />
+        <p>{{ project.postedBy?.bio }}</p>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="card" style="width: 20rem;">
+        <div class="card-block">
+          <h4 class="card-title mycard-title">Join Other Applicants</h4>
+          <p class="card-text mycard-text">Project has only {{ project.numofapplicants }} applicants</p>
+        <div class="spaced">
+          <a class="btn btn-info btn-sm mybtn" role="button" (click)="applyforproject()">Apply for Project &raquo;</a>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

@@ -5,12 +5,14 @@
   .card-img-top { 
     height: 120px;
   }
-  
-  .card-footer {
-    padding: 0;
-    background: #fff;
-  }
 
   .btn {
     cursor: pointer;
+    margin: 0px;
+    margin-bottom: 0px;
+  }
+
+  .card-footer {
+    margin: 0px;
+    margin-bottom: 0px;
   }

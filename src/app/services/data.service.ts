@@ -9,6 +9,7 @@ import 'rxjs/add/observable/throw';
 @Injectable()
 export class DataService {
   //url: string;
+  //protected baseUrl: string = 'https://localhost:3000/api';
   protected baseUrl: string = 'https://localhost:3000/api';
 
   constructor(public http: Http) { }
@@ -84,15 +85,27 @@ export class DataService {
     // I included these headers because otherwise FireFox
     // will request text/html instead of application/X-www-form-urlencoded
     let headers = new Headers();
+    //headers.append('Content-Type', 'multipart/form-data');
+    //headers.append('Accept', 'application/json');
     headers.append('Content-Type', 'application/json');
     return headers;
   }
- 
+
   protected getOtherHeaders() {
     let headers = new Headers();
     //headers.append('Content-Type', 'multipart/form-data');
     return headers;
   }
+
+  protected onceHeaders(){
+    // I included these headers because otherwise FireFox
+    // will request text/html instead of application/X-www-form-urlencoded
+    let headers = new Headers();
+    headers.append('Content-Type', 'multipart/form-data');
+    headers.append('Accept', 'application/json');
+    //headers.append('Content-Type', 'application/json');
+    return headers;
+  } 
 
   protected getNoContentHeaders() {
     let headers = new Headers();
@@ -179,7 +192,7 @@ export class DataService {
       xhr.send(formData);
     });
   }*/
-
+ 
   /*protected setNotificationMessage(msg: string) {
     setTimeout(() => 
     this.notification.error(msg), 1); 

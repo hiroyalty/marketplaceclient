@@ -1,3 +1,79 @@
+<div class="container">
+    <div class="row"> <!-- [(ngModel)]="banner.title", [(ngModel)]="banner.description" --> 
+        <div class="col-md-6">
+        <form #fb="ngForm">
+            <h4 class="form-signup-heading" align="center">
+                Create/Update Banner
+            </h4> 
+            <div class="form-group">
+                <label for="btitle">Title</label>
+                <input #btitle="ngModel" [(ngModel)]="banner.btitle" name="btitle" id="btitle" type="text" class="form-control" required>
+                <div class="alert alert-danger" *ngIf="btitle.touched && btitle.invalid">
+                Title is required.
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="bdescription">description</label>
+                <textarea #bdescription="ngModel" [(ngModel)]="banner.bdescription" name="bdescription" id="bdescription" class="form-control" rows="3" required>
+                </textarea>
+                <div class="alert alert-danger" *ngIf="bdescription.touched && bdescription.invalid">
+                description is required.
+                </div>
+            </div> 
+            <button 
+                [disabled]="!fb.valid"
+                [hidden] = "banner"
+                (click) = "createBanner(fb)"
+                class="btn btn-primary">Save</button>
+            <button 
+                [disabled]="!fb.valid"
+                [hidden] = "!banner"
+                (click) = "updateBanner(fb)"
+                class="btn btn-primary">Update</button>
+        </form>
+        <hr/>
+        <table class="table">
+            <thead>
+                <tr>
+                <th scope="col">#</th>
+                <th scope="col">Title</th>
+                <th scope="col">Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <th scope="row">#</th>
+                <td>{{ banner?.btitle }}</td>
+                <td>{{ banner?.bdescription }}</td>
+                </tr>
+            </tbody>
+        </table>
+        </div> 
+        <div class="col-md-6">
+        <div>
+            Refresh to See Changes
+            <img src="/assets/images/refresh.png" (click)="refreshBannerDetails()" width="30" height="30" class="point">
+        </div>
+        <div class="card" style="width: 20rem;">
+            <ng-template #defaultimage>
+                <img class="card-img-top" src="/assets/images/default-banner.jpg" alt="{{ banner?.title }}">
+                <input type="file" id="imageLink" name="imageLink" class="form-control" accept="image/*" (change)="getFileImageLink($event)" ngModel #imageLink [hidden]="true">
+                <button type="button" class="btn btn-secondary" (click)="imageLink.click()">Upload Picture</button>
+            </ng-template>
+            <div *ngIf="banner.imageLink;else defaultimage" class="card-block">
+                <img class="card-img-top" src="{{ banner?.imageLink }}" alt="{{ banner?.imageLink }}">    
+                <input type="file" id="imageLink" name="imageLink" class="form-control" accept="image/*" (change)="updateFileImageLink($event)" ngModel #imageLink [hidden]="true">
+                <button (click)="imageLink.click()" class="btn btn-secondary card-img-top">Update Picture</button>
+                <!--<input type="file" accept="image/*" [hidden]="true" #file>
+                <button (click)="file.click()">Upload file</button>-->
+            </div>
+        </div> 
+        </div>
+    </div>
+    <div>
+        <hr class="bigspace">
+    </div>
+
 <div class="row">
     <div class="col-md-6">
     
@@ -135,4 +211,5 @@
         </tbody>
     </table>
     </div>
+</div>
 </div>

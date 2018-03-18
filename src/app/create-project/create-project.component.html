@@ -1,0 +1,342 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-header">
+          Project Settings
+        </div>
+        <ul class="list-group list-group-flush">
+          <a class="list-group-item list-group-item-action"
+            (click)="activateGeneralInfo()"
+            [class.active]="generalInfo"
+            [class.inactive]="!generalInfo">Project General Info</a>
+          
+          <a class="list-group-item list-group-item-action"
+            (click)="activateAdditionalDocuments()"
+            [class.active]="additionalDocuments"
+            [class.inactive]="!additionalDocuments">Additional Documents</a>
+
+          <a class="list-group-item list-group-item-action"
+            (click)="activateApplicantList()"
+            [class.active]="applicantList"
+            [class.inactive]="!applicantList">Applicants List</a>
+    
+          <a class="list-group-item list-group-item-action"
+            (click)="activateprojectAwardee()"
+            [class.active]="projectAwardee"
+            [class.inactive]="!projectAwardee">Project Awardee</a>
+
+          <!--<a class="list-group-item list-group-item-action"
+            (click)="activatemessageTrail()"
+            [class.active]="messageTrail"
+            [class.inactive]="!messageTrail">Message Trail</a>
+           -->
+
+          <a class="list-group-item list-group-item-action"
+            (click)="activateAllProjects()"
+            [class.active]="allProjects"
+            [class.inactive]="!allProjects">All Projects</a>
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <form *ngIf="generalInfo" [formGroup]="form.getForm()" (ngSubmit)="save()">
+        <h2 class="form-signup-heading" align="center">
+          Create Project
+        </h2>
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input id="title" type="text" class="form-control" formControlName="title">
+          <div *ngIf="form.hasError('title')" class="alert alert-danger">
+            {{form.getError('title')}}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="introDescription">Intro-Description</label>
+          <textarea id="introDescription" class="form-control" rows="3" formControlName="introDescription"></textarea>
+          <div *ngIf="form.hasError('introDescription')" class="alert alert-danger">
+            {{form.getError('introDescription')}}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description" class="form-control" rows="5" formControlName="description"></textarea>
+          <div *ngIf="form.hasError('description')" class="alert alert-danger">
+            {{form.getError('description')}}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="category">Category</label>
+          <select formControlName="category" id="category" class="form-control">
+            <option value=""></option>
+            <option *ngFor="let category of projectCategories" [value]="category.pctitle">
+              {{ category.pctitle }}
+            </option>
+          </select>
+          <div *ngIf="form.hasError('category')" class="alert alert-danger">
+            {{form.getError('category')}}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="diffilcultyLevel">Difficulty Level</label>
+          <select formControlName="diffilcultyLevel" id="diffilcultyLevel" class="form-control">
+            <option value=""></option>
+            <option *ngFor="let e of enumVal" [value]="e.id">
+              {{ e.name }}
+            </option>
+          </select>
+          <div *ngIf="form.hasError('diffilcultyLevel')" class="alert alert-danger">
+            {{form.getError('diffilcultyLevel')}}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="location">Location</label>
+          <input id="location" type="text" class="form-control" formControlName="location" placeholder="remote or name of city">
+          <small id="locationHelp" class="form-text text-muted">Either remote or the City</small>
+          <div *ngIf="form.hasError('location')" class="alert alert-danger">
+            {{form.getError('location')}}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="url">URL</label>
+          <input id="url" type="text" class="form-control" formControlName="url" placeholder="https://example.com/">
+          <small id="urlHelp" class="form-text text-muted">https://example.com/</small>
+          <div *ngIf="form.hasError('url')" class="alert alert-danger">
+            {{form.getError('url')}}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="status">Status</label>
+          <select formControlName="status" id="status" class="form-control">
+            <option value=""></option>
+            <option *ngFor="let s of statusVal" [value]="s.id">
+              {{ s.name }}
+            </option>
+          </select>
+          <div *ngIf="form.hasError('status')" class="alert alert-danger">
+            {{form.getError('status')}}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="projectlifespan">Project Duration(weeks)</label>
+          <input id="projectlifespan" type="number" class="form-control" formControlName="projectlifespan">
+          <div *ngIf="form.hasError('projectlifespan')" class="alert alert-danger">
+            {{form.getError('projectlifespan')}}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="applicationdeadline">Application Deadline</label>
+          <mat-form-field>
+            <!--<input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="applicationdeadline" formControlName="applicationdeadline" name="applicationdeadline" placeholder="Choose a date" class="form-control">-->
+            <input matInput [matDatepicker]="applicationdeadline" formControlName="applicationdeadline" name="applicationdeadline" placeholder="Choose a date" class="form-control">
+            <mat-datepicker-toggle matSuffix [for]="applicationdeadline"></mat-datepicker-toggle>
+            <mat-datepicker #applicationdeadline></mat-datepicker>
+          </mat-form-field>
+          <!--<div *ngIf="form.hasError('lastname')" class="alert alert-danger">
+            {{form.getError('lastname')}}
+          </div>-->
+        </div>
+        <div class="card card-default">
+          <div class="card-header">
+            <span>Project Skill Requirement</span>
+            <span class="pull-right" >
+              <!--<i class="fa fa-times" aria-hidden="true"></i>-->
+              
+              <i class="fa fa-thumb-tack" aria-hidden="true"></i>
+            </span>
+          </div>
+          <div class="card-body">
+            <div class="form-group col-xs-6">
+              <label for="bigdataNoSQL">bigdataNoSQL</label>
+              <select formControlName="bigdataNoSQL" id="bigdataNoSQL" class="form-control">
+                <option value=""></option>
+                <option *ngFor="let e of enumVal" [value]="e.id">
+                  {{ e.name }}
+                </option>
+              </select>
+              <div *ngIf="form.hasError('bigdataNoSQL')" class="alert alert-danger">
+                {{form.getError('bigdataNoSQL')}}
+              </div>
+            </div>
+            <div class="form-group col-xs-6">
+              <label for="RelationalDB">RelationalDB</label>
+              <select formControlName="RelationalDB" id="RelationalDB" class="form-control">
+                <option value=""></option>
+                <option *ngFor="let e of enumVal" [value]="e.id">
+                  {{ e.name }}
+                </option>
+              </select>
+              <div *ngIf="form.hasError('RelationalDB')" class="alert alert-danger">
+                {{form.getError('RelationalDB')}}
+              </div>
+            </div>
+            <div class="form-group col-xs-6">
+              <label for="programming">Programming</label>
+              <select formControlName="programming" id="programming" class="form-control">
+                <option value=""></option>
+                <option *ngFor="let e of enumVal" [value]="e.id">
+                  {{ e.name }}
+                </option>
+              </select>
+              <div *ngIf="form.hasError('programming')" class="alert alert-danger">
+                {{form.getError('programming')}}
+              </div>
+            </div>
+            <div class="form-group col-xs-6">
+              <label for="webdevelopment">Web Development</label>
+              <select formControlName="webdevelopment" id="webdevelopment" class="form-control">
+                <option value=""></option>
+                <option *ngFor="let e of enumVal" [value]="e.id">
+                  {{ e.name }}
+                </option>
+              </select>
+              <div *ngIf="form.hasError('webdevelopment')" class="alert alert-danger">
+                {{form.getError('webdevelopment')}}
+              </div>
+            </div>
+            <div class="form-group col-xs-6">
+              <label for="networking">Networking</label>
+              <select formControlName="networking" id="networking" class="form-control">
+                <option value=""></option>
+                <option *ngFor="let e of enumVal" [value]="e.id">
+                  {{ e.name }}
+                </option>
+              </select>
+              <div *ngIf="form.hasError('networking')" class="alert alert-danger">
+                {{form.getError('networking')}}
+              </div>
+            </div>
+            <div class="form-group col-xs-6">
+              <label for="cloudcomputing">Cloud Computing</label>
+              <select formControlName="cloudcomputing" id="cloudcomputing" class="form-control">
+                <option value=""></option>
+                <option *ngFor="let e of enumVal" [value]="e.id">
+                  {{ e.name }}
+                </option>
+              </select>
+              <div *ngIf="form.hasError('cloudcomputing')" class="alert alert-danger">
+                {{form.getError('cloudcomputing')}}
+              </div>
+            </div>
+            <div class="form-group col-xs-6">
+              <label for="operatingsystem">Operating System</label>
+              <select formControlName="operatingsystem" id="operatingsystem" class="form-control">
+                <option value=""></option>
+                <option *ngFor="let e of enumVal" [value]="e.id">
+                  {{ e.name }}
+                </option>
+              </select>
+              <div *ngIf="form.hasError('operatingsystem')" class="alert alert-danger">
+                {{form.getError('operatingsystem')}}
+              </div>
+            </div>
+            <div class="form-group col-xs-6">
+              <label for="games">Games</label>
+              <select formControlName="games" id="games" class="form-control">
+                <option value=""></option>
+                <option *ngFor="let e of enumVal" [value]="e.id">
+                  {{ e.name }}
+                </option>
+              </select>
+              <div *ngIf="form.hasError('games')" class="alert alert-danger">
+                {{form.getError('games')}}
+              </div>
+            </div>
+            <div class="form-group col-xs-6">
+              <label for="devices">Devices</label>
+              <select formControlName="devices" id="devices" class="form-control">
+                <option value=""></option>
+                <option *ngFor="let e of enumVal" [value]="e.id">
+                  {{ e.name }}
+                </option>
+              </select>
+              <div *ngIf="form.hasError('devices')" class="alert alert-danger">
+                {{form.getError('devices')}}
+              </div>
+            </div>
+            <div class="form-group col-xs-6">
+              <label for="android">Android</label>
+              <select formControlName="android" id="android" class="form-control">
+                <option value=""></option>
+                <option *ngFor="let e of enumVal" [value]="e.id">
+                  {{ e.name }}
+                </option>
+              </select>
+              <div *ngIf="form.hasError('android')" class="alert alert-danger">
+                {{form.getError('android')}}
+              </div>
+            </div>
+            <div class="form-group col-xs-6">
+              <label for="ios">IOS</label>
+              <select formControlName="ios" id="ios" class="form-control">
+                <option value=""></option>
+                <option *ngFor="let e of enumVal" [value]="e.id">
+                  {{ e.name }}
+                </option>
+              </select>
+              <div *ngIf="form.hasError('ios')" class="alert alert-danger">
+                {{form.getError('ios')}}
+              </div>
+            </div>
+            <div class="form-group col-xs-6">
+              <label for="windowsphone">Windows Phone</label>
+              <select formControlName="windowsphone" id="windowsphone" class="form-control">
+                <option value=""></option>
+                <option *ngFor="let e of enumVal" [value]="e.id">
+                  {{ e.name }}
+                </option>
+              </select>
+              <div *ngIf="form.hasError('windowsphone')" class="alert alert-danger">
+                {{form.getError('windowsphone')}}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--<div class="form-group col-xs-6 spaced" [ngClass]="{'has-error':!form.controls['image'].valid && form.controls['image'].touched}"></div>-->
+        <div class="form-group col-xs-6 spaced">
+          <label for="image">Project Image</label>
+          <input type="file" id="image" accept="image/*" (change)="getFileimage($event)" #image hidden="true">
+          <input type="file" id="updateimage" accept="image/*" (change)="updateProjectImage($event)" #updateimage hidden="true">
+          <div class="card-block">
+            <div *ngIf="imageUrl" class="card-img-top">
+              <img class="card-img-top" src="{{ imageUrl }}" alt="{{ title }}">
+              <button type="button" (click)="updateimage.click()" class="btn btn-info card-img-top">Update Project Image</button>
+            </div>
+            <div *ngIf="!imageUrl"class="card-img-top">
+              <button type="button" (click)="image.click()" class="btn btn-info">Upload Project Image</button>
+              <i class="fa fa-times point" aria-hidden="true" (click)="clearFile()"></i>
+            </div>
+          </div>
+          <!--<div *ngIf="form.controls['image'].hasError('required') && form.controls['image'].touched" class="alert alert-danger">
+            Project Image is required.
+          </div>-->
+        </div>
+ 
+        <!--<button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+          Save<i class="fa fa-spinner fa-spin fa-fw" aria-hidden="true" *ngIf="loading"></i>            
+        </button>
+        <button type="button" (click)="delete()" class="btn btn-danger">Delete</button>
+      </form>-->
+
+        <button type="submit" class="btn btn-success">
+          Create Project<i class="fa fa-spinner fa-spin fa-fw" aria-hidden="true" *ngIf="loading"></i>
+        </button>
+      </form>
+
+      <div *ngIf="additionalDocuments" class="alert alert-info" role="alert">
+        <strong>Unauthorized!</strong> You can only Add Additional Documents to already created Project.
+      </div>
+
+      <div *ngIf="applicantList" class="alert alert-info" role="alert">
+        <strong>Unauthorized!</strong> You can only see Applicant List of already created Project.
+      </div>
+
+      <div *ngIf="projectAwardee" class="alert alert-info" role="alert">
+        <strong>Unauthorized!</strong> You can only view Awardee Info of already created Project.
+      </div>
+
+    </div>
+    <div class="col-md-3"></div>
+  </div>
+</div>

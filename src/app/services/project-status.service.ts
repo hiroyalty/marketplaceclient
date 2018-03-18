@@ -8,9 +8,9 @@ export class ProjectStatusService {
   getStatusValues() {
     //let list = [{en:'draft'}, {en:'created'}, {en:'awarded'}, {en:'ongoing'}];
     let list = [{ id: 'draft', name: 'Draft'}, 
-      {id: 'created', name: 'Created'}, 
+      {id: 'created', name: 'Created'},
+      {id: 'offered', name: 'Offered'},
       {id: 'awarded', name: 'Awarded'}, 
-      {id: 'ongoing', name: 'Ongoing'},
       {id: 'finished', name: 'Finished'},
     ];
     return list;

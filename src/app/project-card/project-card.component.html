@@ -1,12 +1,12 @@
-<div *ngIf="project.title" class="card">
+<div *ngIf="project.title" class="card" [ngStyle]="stylesObj">
   <img class="card-img-top" *ngIf="project.imageUrl" src="{{ project.imageUrl }}" alt="{{ project.title }}">
   <div class="card-body">
     <h4 class="card-title">{{ project.title | titlecase }}</h4>
     <p class="card-text">Project Duration: {{ project.projectlifespan }} Weeks</p>
     <p class="card-text">Apply before: {{ formatdate }}</p>
-    <button class="btn btn-primary btn-sm" (click)="loadFullProject()">See More</button>
+      <button class="btn btn-primary btn-sm" (click)="loadFullProject()">See More</button>
   </div>
-  <!--
+  <!-- style="width: 15rem;"
     <div *ngIf="loggedIn && member" class="card-footer">
     <button 
       *ngIf="shoppingCart.getQuantity(project) === 0; else updateQuantity"

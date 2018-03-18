@@ -1,3 +1,4 @@
+<div class="container">
 <h3>All Projects</h3>
 <p>
   <a routerLink="/employer/projects/new" class="btn btn-primary">New Project</a>
@@ -9,12 +10,12 @@
     type="text" class="form-control" placeholder="Search...">
 </p>
 <div class="float-right">
-  <a (click)="refreshUsers()">
+  <a (click)="refreshProjects()">
     <i class="fa fa-refresh point" aria-hidden="true"></i>
   </a>
 </div>
 <data-table
-  [items]="items"
+  [items]="items" 
   [itemCount]="itemCount"
   (reload)="reloadItems($event)"
 >
@@ -32,13 +33,13 @@
     [resizable]="true"
   >
   </data-table-column>
-  <data-table-column
+  <!--<data-table-column
     [property]="'awardedTo'"
     [header]="'Awarded'"
     [sortable]="true"
     [resizable]="true"
   >
-  </data-table-column>
+  </data-table-column>-->
   <data-table-column
     [property]="'status'"
     [header]="'Status'"
@@ -54,15 +55,16 @@
       <a [routerLink]="['/employer/edit-project/', item._id]">Edit</a>
     </ng-template>
   </data-table-column>
-  <data-table-column
+  <!--<data-table-column
     [property]="'_id'"
     [header]="Delete"
     [resizable]="true"
   > 
-  <ng-template #dataTableCell let-item="item">
-    <a (click)="deleteUser(item)">
-      <i class="fa fa-trash point" aria-hidden="true"></i>
-    </a>
-  </ng-template>
-</data-table-column>
+    <ng-template #dataTableCell let-item="item">
+      <a (click)="deleteProject(item)">
+        <i class="fa fa-trash point" aria-hidden="true"></i>
+      </a>
+    </ng-template>
+  </data-table-column> -->
 </data-table>
+</div>

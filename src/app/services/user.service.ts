@@ -17,7 +17,7 @@ export class UserService extends DataService {
   getUser(id) {
     return super.getOne(this.baseUrl + '/users/getuser', id);
   }
-
+ 
   create(user: AppUser) { 
     return super.create(this.baseUrl + '/auth/register', user);
   }
@@ -27,17 +27,19 @@ export class UserService extends DataService {
     //return this.http.post(this.baseUrl + '/users/update', user); 
   }
 
+  //To update a user project preference
   userUpdatePrefs(id, resource) {
     return super.put(this.baseUrl + '/users/updateprefs/' + id, resource);
   }
 
+  //To get a users project preference
   getProjectPref(id) {
     return super.getOne(this.baseUrl + '/users/projectprefs', id);
   }
 
-  adminUpdateUser(userId, user) {
+  adminUpdateUser(id, resource) {
     //return this.http.put('/users/' + user._id, user);
-    return super.update(this.baseUrl + '/users/update' + userId, user);
+    return super.update(this.baseUrl + '/users/adminUpdateUser/' + id, resource);
   }
  
   delete(id: string) {
@@ -67,8 +69,14 @@ export class UserService extends DataService {
     .catch(error => { return this.handleError(error); }) ;
   }
 
+  uploadCompanyCertificate(formdata: any ) {
+    return this.http.post(this.baseUrl + '/users/uploadcompanycerticate', formdata, this.getOtherOptions())
+    .catch(error => { return this.handleError(error); }) ;
+  }
+
   uploadPicture(formdata: any ) {
     return this.http.post(this.baseUrl + '/users/uploadpicture', formdata, this.getOtherOptions())
     .catch(error => { return this.handleError(error); }) ;
   }
+
 }

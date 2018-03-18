@@ -1,3 +1,4 @@
+import { NotificationsService } from 'app/services/notifications.service';
 import { Subscription } from 'rxjs/Subscription';
 import { Component, OnInit } from '@angular/core';
 import { Project } from 'app/models/project';
@@ -15,7 +16,10 @@ export class EmployerComponent implements OnInit {
   tableResource: DataTableResource<Project>;
   items: Project[] = [];
   itemCount: number;
-  constructor(private projectService: ProjectService) {
+  errorMessage;
+  constructor(
+    private projectService: ProjectService,
+    private notificationsService: NotificationsService) {
     this.subscription = this.projectService.getAllEmployerProjects()
       .subscribe(projects => {
         this.projects = projects;
@@ -37,7 +41,7 @@ export class EmployerComponent implements OnInit {
     this.tableResource.query(params)
     .then(items => this.items = items);
   }
-
+ 
   filter(query: string) {
     let filteredProjects = (query) ?
       this.projects.filter(p => p.title.toLowerCase().includes(query.toLowerCase())) :
@@ -51,6 +55,29 @@ export class EmployerComponent implements OnInit {
   //3. use the subscription object and unsubscribe when we done.
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  refreshProjects(){
+    this.subscription = this.projectService.getAllEmployerProjects()
+      .subscribe(projects => {
+        this.projects = projects;
+        this.initializeTable(projects);
+    });
+  }
+
+  deleteProject(item) {
+    console.log(item);
+    //this.projects.splice()
+    this.projectService.deleteProject(item._id, item.postedBy.username)
+     .subscribe(dat => {
+      this.notificationsService.notify("success", 'Deletion Successful', 
+      'Project Deletion Successful');
+    },
+    errorMessage => { 
+      this.notificationsService.notify("error", 'Deletion Failed', 'Project Deletion Failed');
+      this.errorMessage = <any>errorMessage;
+    });
+    this.refreshProjects();
   }
 
   ngOnInit() {

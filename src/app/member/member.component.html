@@ -1,57 +1,70 @@
-
-  <div class="card">
-    <div class="card-header">
-      Personal Settings
-    </div>
-    <ul class="list-group list-group-flush">
-      <a class="list-group-item list-group-item-action"
-        (click)="activateProfile()"
-        [class.active]="profile"
-        [class.inactive]="!profile">Profile</a>
-      
-      <a class="list-group-item list-group-item-action"
-        
-        [class.active]="cv"
-        [class.inactive]="!cv">CV</a>
-
-      <a class="list-group-item list-group-item-action"
-        (click)="activateDatabase()"
-        [class.active]="database"
-        [class.inactive]="!database">Database</a>
-
-      <a class="list-group-item list-group-item-action"
-        (click)="activateProgramming()"
-        [class.active]="program"
-        [class.inactive]="!program">Programming</a>
-
-      <a class="list-group-item list-group-item-action"
-        (click)="activateWeb()"
-        [class.active]="web"
-        [class.inactive]="!web">Web Development</a>
-
-      <a class="list-group-item list-group-item-action"
-        (click)="activateMobile()"
-        [class.active]="mobile"
-        [class.inactive]="!mobile">Mobile Development</a>
-
-      <a class="list-group-item list-group-item-action"
-        (click)="activateNet()"
-        [class.active]="net"
-        [class.inactive]="!net">Networking | Operating System</a>
-
-      <a class="list-group-item list-group-item-action"
-        (click)="activateGames()"
-        [class.active]="games"
-        [class.inactive]="!games">Games | Devices</a>
-
-      <a class="list-group-item list-group-item-action"
-        (click)="activateProject()"
-        [class.active]="project"
-        [class.inactive]="!project">Project Interest</a>
-
-      <a class="list-group-item list-group-item-action"
-        (click)="activatePassword()"
-        [class.active]="password"
-        [class.inactive]="!password">Update Password</a>
-    </ul>
+<div class="container">
+  <h3>My Projects</h3>
+  <!--<p>
+    <a routerLink="/member/idea/new" class="btn btn-primary">New Idea</a>
+  </p>-->
+  <p>
+    <input 
+      #query
+      (keyup)="filter(query.value)"
+      type="text" class="form-control" placeholder="Search...">
+  </p>
+  <div class="float-right">
+    <a (click)="refreshProjects()">
+      <i class="fa fa-refresh point" aria-hidden="true"></i>
+    </a>
   </div>
+  <data-table
+    [items]="items"
+    [itemCount]="itemCount"
+    (reload)="reloadItems($event)"
+  >
+    <data-table-column
+      [property]="'title'"
+      [header]="'Title'"
+      [sortable]="true"
+      [resizable]="true"
+    >
+    </data-table-column>
+    <data-table-column
+      [property]="'category'"
+      [header]="'Category'"
+      [sortable]="true"
+      [resizable]="true"
+    >
+    </data-table-column>
+    <!--<data-table-column
+      [property]="'postedBy.username'"
+      [header]="'Posted By'"
+      [sortable]="true"
+      [resizable]="true"
+    >
+    </data-table-column> -->
+    <data-table-column
+      [property]="'status'"
+      [header]="'Status'"
+      [sortable]="true"
+      [resizable]="true"
+    >
+    </data-table-column>
+    <data-table-column
+      [property]="'_id'"
+      [resizable]="true"
+    >
+      <ng-template #dataTableCell let-item="item">
+        <a [routerLink]="['/mem/edit-project/', item._id]">See More</a>
+      </ng-template>
+    </data-table-column>
+    <!--<data-table-column
+      [property]="'_id'"
+      [header]="Delete"
+      [resizable]="true"
+    > 
+      <ng-template #dataTableCell let-item="item">
+        <a (click)="deleteProject(item)">
+          <i class="fa fa-trash point" aria-hidden="true"></i>
+        </a>
+      </ng-template>
+    </data-table-column> -->
+  </data-table>
+</div>

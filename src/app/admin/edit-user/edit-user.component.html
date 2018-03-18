@@ -1,4 +1,4 @@
-<div class="row">
+<!--<div class="row">
   <div class="col-md-6">
     <form #f="ngForm" (ngSubmit)="save(f.value)">
       <div class="form-group">
@@ -58,7 +58,6 @@
     </form> 
   </div>
   <div class="col-md-6">
-    <!--<user-card [user]="user" [show-actions]="false"></user-card> -->
     <div *ngIf="user.username" class="card pull-right" style="width: 20rem;">
       <img class="card-img-top" *ngIf="user.picture" src="{{ user.picture }}" alt="{{ user.username }}">
       <div class="card-body">
@@ -67,5 +66,240 @@
       </div>
     </div> 
   </div>
-</div>
+</div> -->
+<div class="container">
+  <div class="row">
+    <div class="col-3">
+      <div class="card pull-left border-0" style="width: 14rem;">
+        <ng-template #defaultimage>
+          <img class="card-img-top" src="/assets/images/defaultpicture.png" alt="{{ currentUser?.username }}">
+          <p></p>
+          <h3 class="card-title">{{ currentUser?.firstname | titlecase }} {{ currentUser?.lastname | titlecase }}</h3>
+          <h5 class="card-text">{{ currentUser?.username }}</h5>
+        </ng-template>
+        <div *ngIf="currentUser?.picture;else defaultimage" class="card-block">
+          <img class="card-img-top" src="{{ currentUser?.picture }}" alt="{{ currentUser?.username }}">
+          <p></p>  
+          <h3 class="card-title">{{ currentUser?.firstname | titlecase }} {{ currentUser?.lastname | titlecase }}</h3>
+          <h5 class="card-text">{{ currentUser?.username }}</h5>
+        </div>
+        <div class="toppad">
+          <hr/>
+        </div>
+        <p><i class="fa fa-link"></i><span class="leftpad"><a href="{{ currentUser?.url }}">{{ currentUser?.url }}</a></span></p>
+        <p><i class="fa fa-envelope"></i><span class="leftpad">{{ currentUser?.email }}</span></p>
+      </div>
+    </div>
 
+    <div class="col-6">
+      <div class="row">
+        <div class="col">
+          <h2>Bio</h2>
+          <hr/>
+          <p style="white-space: pre-line">{{ currentUser?.bio }}</p>
+
+          <h4 *ngIf="completedProjects?.length < 1 && role === 'member'">Completed Project</h4>
+          <hr/>
+        </div>
+      </div>
+      <div *ngIf="completedProjects && role === 'member'" class="row">
+        <ng-container *ngFor="let p of completedProjects; let i = index">
+          <div class="col">
+            <project-card [project]="p" [stylesObj]="stylesObj"></project-card>
+          </div>
+          <div *ngIf="(i + 1) % 3 === 0" class="row"></div>
+        </ng-container>
+      </div>
+      <div *ngIf="completedProjects?.length < 1 && role === 'member'" class="row alert alert-info" role="alert">
+        <strong>Ops!&nbsp; </strong> User currently do not have any completed Project.
+      </div>
+      <div *ngIf="ongoingProjects && role === 'member'" class="row">
+        <div class="col">
+          <h4>On-going Project</h4>
+          <hr/>
+        </div>
+      </div>
+      <div *ngIf="ongoingProjects && role === 'member'" class="row">
+        <ng-container *ngFor="let p of ongoingProjects; let i = index">
+          <div class="col">
+            <project-card [project]="p" [stylesObj]="stylesObj"></project-card>
+          </div>
+          <div *ngIf="(i + 1) % 3 === 0" class="row"></div>
+        </ng-container>
+      </div>
+      <div *ngIf="ongoingProjects?.length < 1 && role === 'member'" class="row alert alert-info" role="alert">
+        <strong>Ops!&nbsp; </strong> User currently do not have any Ongoing Project.
+      </div>
+
+      <div *ngIf="allEmployerProjects && role === 'employer'" class="row">
+        <div class="col">
+          <h4>All Employers Projects</h4>
+          <hr/>
+        </div>
+      </div>
+      <div *ngIf="allEmployerProjects && role === 'employer'" class="row">
+        <ng-container *ngFor="let p of allEmployerProjects; let i = index">
+          <div class="col">
+            <project-card [project]="p" [stylesObj]="stylesObj"></project-card>
+          </div>
+          <div *ngIf="(i + 1) % 3 === 0" class="row"></div>
+        </ng-container>
+      </div>
+      <div *ngIf="(currentUser?.cv || currentUser?.coverletter) && role === 'member'" class="row">
+        <div class="col">
+          <h4>Users Documents</h4>
+          <hr/>
+          <table class="table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>File Name</th>
+                  <th>Download</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="currentUser?.cv">
+                  <th scope="row">#</th>
+                  <td>CV</td>
+                  <td><a href="{{currentUser.cv}}">
+                    <img src="assets/images/{{currentUser.cvicon}}.png" width="30" height="30">
+                  </a></td>
+                </tr>
+                <tr *ngIf="currentUser?.coverletter">
+                  <th scope="row">#</th>
+                  <td>Cover Letter</td>
+                  <td><a href="{{currentUser.coverletter}}">
+                    <img src="assets/images/{{currentUser.coverlettericon}}.png" width="30" height="30">
+                  </a></td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+      </div>
+      <div *ngIf="role === 'member'" class="row">
+        <div class="col">
+          <ngb-accordion activeIds="ngb-panel-0" #acc="ngbAccordion">
+            <ngb-panel>
+              <ng-template ngbPanelTitle>
+                <span style="color:black"><h4>Skill Set</h4></span>
+              </ng-template>
+              <ng-template ngbPanelContent>
+                <div class="card card-default">
+                  <div class="card-header">
+                    <span></span>
+                    <span class="pull-right" >
+                      <i class="fa fa-thumb-tack" aria-hidden="true"></i>
+                    </span>
+                  </div>
+                  <div class="card-body">
+                    <div class="form-group col-xs-6">
+                      <label for="bigdataNoSQL">bigdataNoSQL</label>
+                      <label id="bigdataNoSQL" class="form-control">
+                        {{ currentUser?.bigdataNoSQL }}
+                      </label>
+                    </div>
+                    <div class="form-group col-xs-6">
+                      <label for="RelationalDB">RelationalDB</label>
+                      <label id="RelationalDB" class="form-control">
+                        {{ currentUser?.mysql }}
+                      </label>
+                    </div>
+                    <div class="form-group col-xs-6">
+                      <label for="programming">Programming</label>
+                      <label id="programming" class="form-control">
+                        {{ currentUser?.cplusplus }}
+                      </label>
+                    </div>
+                    <div class="form-group col-xs-6">
+                      <label for="webdevelopment">Web Development</label>
+                      <label id="webdevelopment" class="form-control">
+                        {{ currentUser?.javascript }}
+                      </label>
+                    </div>
+                    <div class="form-group col-xs-6">
+                      <label for="networking">Networking</label>
+                      <label id="networking" class="form-control">
+                        {{ currentUser?.networking }}
+                      </label>
+                    </div>
+                    <div class="form-group col-xs-6">
+                      <label for="cloudcomputing">Cloud Computing</label>
+                      <label id="cloudcomputing" class="form-control">
+                        {{ currentUser?.cloudcomputing }}
+                      </label>
+                    </div>
+                    <div class="form-group col-xs-6">
+                      <label for="linux">Operating System</label>
+                      <label id="linux" class="form-control">
+                        {{ currentUser?.linux }}
+                      </label>
+                    </div>
+                    <div class="form-group col-xs-6">
+                      <label for="games">Games</label>
+                      <label id="games" class="form-control">
+                        {{ currentUser?.games }}
+                      </label>
+                    </div>
+                    <div class="form-group col-xs-6">
+                      <label for="devices">Devices</label>
+                      <label id="devices" class="form-control">
+                        {{ currentUser?.devices }}
+                      </label>
+                    </div>
+                    <div class="form-group col-xs-6">
+                      <label for="android">Android</label>
+                      <label id="android" class="form-control">
+                        {{ currentUser?.android }}
+                      </label>
+                    </div>
+                    <div class="form-group col-xs-6">
+                      <label for="ios">IOS</label>
+                      <label id="ios" class="form-control">
+                        {{ currentUser?.ios }}
+                      </label>
+                    </div>
+                    <div class="form-group col-xs-6">
+                      <label for="windowsphone">Windows Phone</label>
+                      <label id="windowsphone" class="form-control">
+                        {{ currentUser?.windowsphone }}
+                      </label>
+                    </div>
+                  </div> 
+                </div>
+              </ng-template>
+            </ngb-panel>
+          </ngb-accordion>
+        </div>
+      </div>
+
+    </div>
+ 
+    <div class="col-3">
+      <div class="card border-0">
+        <h4 class="card-title padtop">Update User</h4>
+        <form #f="ngForm" (ngSubmit)="save(f)">
+        <div class="form-group">
+          <h6 class="label" for="role">User Category</h6>
+          <select ngModel name="role" id="role" class="form-control" required>
+            <option value=""></option>
+            <option *ngFor="let c of ucategories" [value]="c.title" [selected]="c.title == role">
+              {{ c.title }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <h6 class="label" for="role">User Status</h6>
+          <select ngModel name="status" id="status" class="form-control" required>
+            <option value=""></option>
+            <option *ngFor="let sv of statusVal" [value]="sv.id" [selected]="sv.id == status">
+                {{ sv.name }}
+              </option>
+            </select>
+        </div>
+        <button class="btn btn-primary">Save</button>
+        <button type="button" (click)="deleteUser()" class="btn btn-danger">Delete</button>
+        </form> 
+      </div>
+    </div>
+  </div>
+</div>

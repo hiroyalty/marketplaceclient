@@ -1,0 +1,53 @@
+<!--<div class="container">
+  <div class="row">
+    <div class="col-3"></div> 
+ 
+    <div class="col-6"> -->
+      <div class="detailBox">
+        <div class="titleBox">
+          <label>Comment Here</label>
+            <button type="button" class="close" aria-hidden="true">&times;</button>
+        </div>
+        <div class="commentBox">
+          <p class="taskDescription">This trail shows history of interaction between you and the Employer</p>
+        </div>
+        <div class="actionBox">
+          <div *ngIf="allComments?.length > 0">
+            <ul *ngFor="let oneComment of allComments" class="commentList">
+              <li>
+                <div class="commenterImage">
+                  <img src="{{ oneComment?.userpix}}" />
+                </div>
+                <div class="commentText"> 
+                  <p class="">{{ oneComment?.message }}</p>
+                  <span class="date sub-text">{{ showTime(oneComment?.messageTime) }}</span>
+                </div> 
+              </li> 
+            </ul> 
+          </div>
+          <form [formGroup]="form.getForm()" class="form-inline" (ngSubmit)="makeComment()">
+            <div class="form-group">
+              <textarea formControlName="message" name="message" id="message" class="form-control" rows="3" placeholder="Your comments"></textarea>
+              <div *ngIf="form.hasError('message')" class="alert alert-danger">
+                {{form.getError('message')}}
+              </div>
+            </div>
+            <div class="form-group addbuton">
+              <button class="btn btn-default">Add</button>
+            </div>
+          </form>
+          <!-- <form #f="ngForm" class="form-inline">
+            <div class="form-group">
+              <textarea #message="ngModel" [(ngModel)]="comment.message" name="message" id="message" class="form-control" rows="3" placeholder="Your comments"></textarea>
+            </div>
+            <div class="form-group addbuton">
+              <button class="btn btn-default" (click)="makeComment(f)">Add</button>
+            </div>
+          </form> -->
+        </div>
+      </div>
+    <!--</div> 
+
+    <div class="col-3"></div>
+  </div>
+</div> -->

@@ -8,7 +8,7 @@ import { AuthService } from '../../services/auth.service';
 import { Component, NgZone, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { ProjectStatusService } from 'app/services/project-status.service';
 import { MatDatepicker } from '@angular/material';
-import { NgForm, FormBuilder, Validators } from '@angular/forms';
+import { NgForm, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Project } from 'app/models/project';
 import * as moment from 'moment';
 
@@ -18,15 +18,19 @@ import * as moment from 'moment';
   styleUrls: ['./project-form.component.css']
 })
 export class ProjectFormComponent implements OnInit {
+  currentUser;
   project: Project;
   statusVal;
   projectCategories;
+  //ProjectLevels;
   minDate;
   maxDate;
   generalInfo: boolean;
   additionalDocuments: boolean;
   aboutEmployer: boolean;
   applicantList: boolean;
+  projectAwardee: boolean;
+  messageTrail: boolean;
   allProjects: boolean;
   enumVal;
   id;
@@ -39,9 +43,20 @@ export class ProjectFormComponent implements OnInit {
   projectdocs: {};
   projectdocsuploadbutton: boolean = false;
   allProjectDocs;
+
   form; FormGroup;
+  ctrl = new FormControl({value: '', disabled: true});
+ 
   titleValue = '';
+  applicantsList;
+  awardedTo;
+  offeredTo;
+  allApplicants: {};
+  postedBy;
+  adminUserRole;
+  memberUserRole;
   @Input() projectTitle: string;
+  projectId: string; 
   @ViewChild(MatDatepicker) datepicker: MatDatepicker<Date>;
   @ViewChild('image') image: ElementRef;
   constructor(
@@ -56,7 +71,11 @@ export class ProjectFormComponent implements OnInit {
     private authService: AuthService,
     private zone: NgZone,
     private fb: FormBuilder
-  ) { 
+  ) {  
+    this.currentUser = this.authService.currentUser;
+    this.adminUserRole = this.authService.userRole('admin');
+    this.memberUserRole = this.authService.userRole('member');
+
     this.createForm();
     
     this.maxDate = new Date(2027, 0, 1);
@@ -69,14 +88,28 @@ export class ProjectFormComponent implements OnInit {
         .subscribe(p => {
            this.project = p;
            console.log(this.project)
+           this.projectId = this.id; 
            this.imageUrl = this.project.imageUrl;
            this.projectTitle = this.project.title;
            this.projectdocs = this.project.projectdocs;
-           //console.log(this.projectdocs);
+           
+           this.allApplicants = this.project.applicantsList;
+           //console.log(this.allApplicants);
+
+           this.awardedTo = this.project.awardedTo;
+           console.log(this.awardedTo);
+
+           this.offeredTo = this.project.offeredTo;
+           console.log(this.offeredTo);
+
+           this.postedBy = this.project.postedBy;
+
            this.form.setValue({
-            title: this.project.title,
+            'title': this.project.title,
+            'introDescription': this.project.introDescription,
             'description': this.project.description,
             'category': this.project.category,
+            'diffilcultyLevel': this.project.diffilcultyLevel,
             'location': this.project.location,
             'url': this.project.url,
             'status'    : this.project.status,
@@ -125,30 +158,34 @@ export class ProjectFormComponent implements OnInit {
         //this.notificationsService.notify("error", 'Unauthorized', 'Could not load Project Categories');
         //this.errorMessage = <any>errorMessage
     });
+    //project diffilculty levels
+
   }
 
   createForm() {
     this.form = this.fb.group({
-      title        : ['', Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(50)])],
-      description  : ['', Validators.required],
-      category : ['', Validators.required],
+      title        : ['', Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(150)])],
+      introDescription  : ['', Validators.required],
+      description  : ['', Validators.required], 
+      category : [{value: '', disabled: this.memberUserRole}, Validators.required],
+      diffilcultyLevel: [{value: '', disabled: this.memberUserRole}, Validators.required],
       location    : ['', Validators.required],
       url : [''],
-      status    : ['', Validators.required],
+      status    : [{value: '', disabled: this.memberUserRole}, Validators.required],
       projectlifespan  : ['', Validators.required],
       applicationdeadline : ['', Validators.required],
-      bigdataNoSQL : ['', Validators.required],
-      RelationalDB : ['', Validators.required],
-      programming : ['', Validators.required],
-      webdevelopment : ['', Validators.required],
-      networking : ['', Validators.required],
-      cloudcomputing : ['', Validators.required],
-      operatingsystem : ['', Validators.required],
-      devices : ['', Validators.required],
-      games : ['', Validators.required],
-      android : ['', Validators.required],
-      ios : ['', Validators.required],
-      windowsphone : ['', Validators.required],
+      bigdataNoSQL : [{value: '', disabled: this.memberUserRole}, Validators.required],
+      RelationalDB : [{value: '', disabled: this.memberUserRole}, Validators.required],
+      programming : [{value: '', disabled: this.memberUserRole}, Validators.required],
+      webdevelopment : [{value: '', disabled: this.memberUserRole}, Validators.required],
+      networking : [{value: '', disabled: this.memberUserRole}, Validators.required],
+      cloudcomputing : [{value: '', disabled: this.memberUserRole}, Validators.required],
+      operatingsystem : [{value: '', disabled: this.memberUserRole}, Validators.required],
+      devices : [{value: '', disabled: this.memberUserRole}, Validators.required],
+      games : [{value: '', disabled: this.memberUserRole}, Validators.required],
+      android : [{value: '', disabled: this.memberUserRole}, Validators.required],
+      ios : [{value: '', disabled: this.memberUserRole}, Validators.required],
+      windowsphone : [{value: '', disabled: this.memberUserRole}, Validators.required],
       imageUrl : [''],
       //image : null,
     });
@@ -161,8 +198,8 @@ export class ProjectFormComponent implements OnInit {
       this.loading = false;
       return;
     }
-    this.projectTitle = this.form.get('title').value;
     
+    console.log(project.title);
     const formModel = this.prepareSave();
     
     if (this.id) {
@@ -180,14 +217,17 @@ export class ProjectFormComponent implements OnInit {
         this.errorMessage = <any>errorMessage;
       });
     //else this.projectService.create(formModel, project)
-    } else { this.projectService.create(project)
-      .subscribe(data => {
-         this.projectService.uploadimage(this.projectTitle, formModel)
+    } else { 
+      this.projectTitle = this.form.get('title').value; 
+      this.projectService.create(project)
+      .subscribe(da => {
+        this.project = da; 
+         this.projectService.uploadimage(this.project.title, formModel)
           .subscribe(data => {
-            this.project = data;
+            this.project = data; 
             this.id = this.project._id;
             this.imageUrl = this.project.imageUrl;
-            this.updateForm();
+            //this.updateForm();
             this.notificationsService.notify("success", 'Creation Successful', 
               'Project Creation Successful');
           });
@@ -195,21 +235,46 @@ export class ProjectFormComponent implements OnInit {
       errorMessage => { 
         this.notificationsService.notify("error", 'Creation Failed', 'Project Title Already Taken, Use Another Title');
         this.errorMessage = <any>errorMessage;
-        this.form.get('title').setErrors(this.errorMessage);
+        //this.form.get('title').setErrors(this.errorMessage);
         //return;
       });
-    }
-      //this.form.reset();
       this.loading = false;
-    //this.router.navigate(['/employer/projects']);*/
+      if(this.adminUserRole) {
+        this.router.navigate(['/admin/myprojects']);
+      } else {
+      this.router.navigate(['/employer/myprojects']);
+      }
+    }
+
+    this.loading = false;
   }
 
   //delete the whole project with all its documents
   delete() {
+    if(!this.id) {
+      this.notificationsService.notify("info", 'Inapplicable', 'Operation not Applicable');
+      return;
+    }
+    console.log(this.postedBy.username);
+
+    //return;
     if (!confirm('Are you sure you want to delete this project?')) return;
 
-    this.projectService.deleteProject(this.id);
-    this.router.navigate(['/employer/myprojects']);
+    this.projectService.deleteProject(this.id, this.postedBy.username)
+     .subscribe(dat => {
+      this.notificationsService.notify("success", 'Deletion Successful', 
+      'Project Deletion Successful');
+    },
+    errorMessage => { 
+      this.notificationsService.notify("error", 'Deletion Failed', 'Project Deletion Failed');
+      this.errorMessage = <any>errorMessage;
+    });
+
+    if(this.authService.userRole('employer')) {
+      this.router.navigate(['/employer/myprojects']);
+    } else {
+      this.router.navigate(['/admin/myprojects']);
+    }
   }
   
   getFileimage(event) {
@@ -265,8 +330,10 @@ export class ProjectFormComponent implements OnInit {
   updateForm() {
     this.form.setValue({
       'title': this.project.title,
+      'introDescription': this.project.introDescription,
       'description': this.project.description,
       'category': this.project.category,
+      'diffilcultyLevel': this.project.diffilcultyLevel,
       'location': this.project.location,
       'url': this.project.url,
       'status'    : this.project.status,
@@ -286,6 +353,7 @@ export class ProjectFormComponent implements OnInit {
       'windowsphone' : this.project.windowsphone,
       'imageUrl' : this.project.imageUrl
     });
+    //console.log(this.project.title);
   }
 
   delInput(): void {
@@ -322,7 +390,23 @@ export class ProjectFormComponent implements OnInit {
   activateAllProjects() {
     this.allFalse();
     this.allProjects = true;
-    this.router.navigate(['/employer/myprojects']);
+    if(this.adminUserRole) {
+      this.router.navigate(['/admin/myprojects']);
+    } else if (this.memberUserRole) {
+      this.router.navigate(['/mem/myprojects']);
+    } else {
+      this.router.navigate(['/employer/myprojects']);
+    }
+  }
+
+  activateprojectAwardee() {
+    this.allFalse();
+    this.projectAwardee = true;
+  }
+
+  activatemessageTrail() {
+    this.allFalse();
+    this.messageTrail = true;
   }
 
   allFalse() {
@@ -330,6 +414,8 @@ export class ProjectFormComponent implements OnInit {
     this.additionalDocuments = false;
     this.aboutEmployer = false;
     this.applicantList = false;
+    this.projectAwardee = false;
+    this.messageTrail = false;
     this.allProjects = false;
   }
 
@@ -439,4 +525,62 @@ export class ProjectFormComponent implements OnInit {
     }
   }
 
+  refreshApplicants() {
+    //console.log('refresh');
+    this.projectService.getApplicantsList(this.id)
+      .subscribe(p => {
+        //console.log(p); //remian awarded and offered(not populated).
+        this.allApplicants = p.applicantsList;
+        this.awardedTo = p.awardedTo;
+        this.offeredTo = p.offeredTo;
+        this.notificationsService.notify("info", 'Refreshed', 'Refresh Successful');
+      },
+      errorMessage => { 
+        this.notificationsService.notify("error", 'Unauthorized', 'Could not reload all applicants');
+        this.errorMessage = <any>errorMessage
+    });
+  }
+
+  offerproject(applicant) { 
+    this.projectService.offerMemberProject(this.id, applicant._id, applicant.username, applicant.email)
+      .subscribe(p => {
+        //console.log(p);
+        this.notificationsService.notify("success", 'Operation Successful', 'Project Successfully Offered!');
+      },
+      errorMessage => { 
+        this.notificationsService.notify("error", 'Operation Failed', 'Could not be completed, try again later');
+        this.errorMessage = <any>errorMessage
+      }); 
+  }
+
+  acceptproject(applicant) {
+    this.projectService.memberAcceptProject(this.id, applicant._id, applicant.username, applicant.email)
+      .subscribe(p => {
+        //console.log(p);
+        this.notificationsService.notify("success", 'Operation Successful', 'Project Successfully Awarded to you!');
+      },
+      errorMessage => { 
+        this.notificationsService.notify("error", 'Operation Failed', 'Project Already Awarded, Sorry!');
+        this.errorMessage = <any>errorMessage
+      });
+  }
+
+  revokeproject(awardedTo) {
+    //console.log(awardedTo);
+    this.projectService.revokeProjectFromMember(this.id, awardedTo._id, awardedTo.username, awardedTo.email)
+      .subscribe(p => {
+        //console.log(p);
+        //this.project = p;
+        this.notificationsService.notify("success", 'Operation Successful', 'Project Successfully Revoked from Member!');
+      },
+      errorMessage => { 
+        this.notificationsService.notify("error", 'Operation Failed', 'Project Revoke Fail, Sorry!');
+        this.errorMessage = <any>errorMessage
+      });
+  }
+
+  seeProfile(applicant_id){
+    console.log(applicant_id + 'to see profile')
+    this.router.navigate(['/profile/' + applicant_id ]);
+  }
 }

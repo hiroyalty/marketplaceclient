@@ -1,6 +1,6 @@
 import { Message } from 'primeng/primeng';
 import { UserService } from './../services/user.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import {ValidationManager} from "ng2-validation-manager";
 import { NotificationsService } from 'app/services/notifications.service';
@@ -13,13 +13,23 @@ import { NotificationsService } from 'app/services/notifications.service';
 export class SignupComponent implements OnInit {
   usermodel: any = {};
   form;
-  userrole = 'User';
+  userrole;
+  anyrole;
   errorMessage: string;
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private notificationsService: NotificationsService,
     private userService: UserService,
-    ) { }
+    ) { 
+      this.route.paramMap
+        .subscribe(params => {
+          this.anyrole = params.get('role');
+          //console.log(this.anyrole);
+        });
+        this.userrole = this.anyrole ? "employer" : "user";
+        console.log(this.userrole);
+    }
 
   ngOnInit() {
     this.form = new ValidationManager({
@@ -45,7 +55,7 @@ export class SignupComponent implements OnInit {
     this.form.removeChildGroup('repassword');
   }
 
-  createUserAccount(){
+  createUserAccount(){ 
     if(this.form.isValid()){
       //alert('validation pass');
       this.removeFormGroup();

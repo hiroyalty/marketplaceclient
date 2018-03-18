@@ -49,5 +49,4 @@ export class BsNavbarComponent implements OnInit {
     //return this.user;
   }
 
-
 } 

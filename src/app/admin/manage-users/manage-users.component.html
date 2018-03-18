@@ -1,59 +1,61 @@
-<h3>All registered users:</h3>
+<div class="container">
+  <h3>All registered users:</h3>
 
-<p>
-  <input 
-    #query
-    (keyup)="filter(query.value)"
-    type="text" class="form-control" placeholder="Search...">
-</p>
-<div class="float-right">
-  <a (click)="refreshUsers()">
-    <i class="fa fa-refresh point" aria-hidden="true"></i>
-  </a>
-</div>
-<data-table
-  [items]="items"
-  [itemCount]="itemCount"
-  (reload)="reloadItems($event)"
->
-  <data-table-column
-    [property]="'username'"
-    [header]="'Username'"
-    [sortable]="true"
-    [resizable]="true"
+  <p>
+    <input 
+      #query
+      (keyup)="filter(query.value)"
+      type="text" class="form-control" placeholder="Search...">
+  </p>
+  <div class="float-right">
+    <a (click)="refreshUsers()">
+      <i class="fa fa-refresh point" aria-hidden="true"></i>
+    </a>
+  </div>
+  <data-table
+    [items]="items"
+    [itemCount]="itemCount"
+    (reload)="reloadItems($event)"
   >
-  </data-table-column>
-  <data-table-column
-    [property]="'role'"
-    [header]="'Role'"
-    [sortable]="true"
-    [resizable]="true"
-  >
-  </data-table-column>
-  <data-table-column
-    [property]="'status'"
-    [header]="'Status'"
-    [sortable]="true"
-    [resizable]="true"
-  >
-  </data-table-column>
-  <data-table-column
-    [property]="'_id'"
-    [resizable]="true"
-  >
+    <data-table-column
+      [property]="'username'"
+      [header]="'Username'"
+      [sortable]="true"
+      [resizable]="true"
+    >
+    </data-table-column>
+    <data-table-column
+      [property]="'role'"
+      [header]="'Role'"
+      [sortable]="true"
+      [resizable]="true"
+    >
+    </data-table-column>
+    <data-table-column
+      [property]="'status'"
+      [header]="'Status'"
+      [sortable]="true"
+      [resizable]="true"
+    >
+    </data-table-column>
+    <data-table-column
+      [property]="'_id'"
+      [resizable]="true"
+    >
+      <ng-template #dataTableCell let-item="item">
+        <a [routerLink]="['/admin/edit-user/', item._id]">Edit</a>
+      </ng-template>
+    </data-table-column>
+    <data-table-column
+      [property]="'_id'"
+      [header]="Delete"
+      [resizable]="true"
+    >
     <ng-template #dataTableCell let-item="item">
-      <a [routerLink]="['/admin/edit-user/', item._id]">Edit</a>
+      <a (click)="deleteUser(item)">
+        <i class="fa fa-trash point" aria-hidden="true"></i>
+      </a>
     </ng-template>
   </data-table-column>
-  <data-table-column
-    [property]="'_id'"
-    [header]="Delete"
-    [resizable]="true"
-  >
-  <ng-template #dataTableCell let-item="item">
-    <a (click)="deleteUser(item)">
-      <i class="fa fa-trash point" aria-hidden="true"></i>
-    </a>
-  </ng-template>
-</data-table-column>
-</data-table>
+  </data-table>
+</div>

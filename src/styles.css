@@ -2,15 +2,20 @@
 @import "~bootstrap/dist/css/bootstrap.css";
 @import "~font-awesome/css/font-awesome.css";
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
-
+ 
+html {
+    position: relative;
+    min-height: 100%;
+} 
 
 body {
-    padding-top: 80px;
-    font: normal 14px Verdana, Arial, sans-serif;
+    padding-top: 70px;
+    font: normal 14px Lato, Tangerine, Verdana, sans-serif, Arial;
+    margin-bottom: 280px;
 }
 .navbar { 
     border-bottom: 3px solid #e7e7e7;
-    color: #333;
+    color: #fff;
     display: block;
     font-weight: 400;
     line-height: 20px;

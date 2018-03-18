@@ -37,7 +37,8 @@ export class AuthService extends DataService {
         //console.log(result);
         if (result && result.token) {
           localStorage.setItem('token', result.token);
-          sessionStorage.setItem('currentUser', JSON.stringify(result.user));
+          localStorage.setItem('currentUser', JSON.stringify(result.user));
+          //sessionStorage.setItem('currentUser', JSON.stringify(result.user));
           sessionStorage.setItem('userPrefs', JSON.stringify(result.userPrefs));
           this.isLoggedin = true;
           //this.loaduserprefs('yetty'); 
@@ -49,7 +50,8 @@ export class AuthService extends DataService {
   
   logout() {
     localStorage.removeItem('token');
-    sessionStorage.removeItem('currentUser');
+    localStorage.removeItem('currentUser');
+    //sessionStorage.removeItem('currentUser');
     sessionStorage.removeItem('userPrefs');
   }
 
@@ -82,7 +84,8 @@ export class AuthService extends DataService {
     //let jwtHelper = new JwtHelper();
     //return jwtHelper.decodeToken(token);
     //return new JwtHelper().decodeToken(token);
-    return JSON.parse(sessionStorage.getItem('currentUser'));
+    //return JSON.parse(sessionStorage.getItem('currentUser'));
+    return JSON.parse(localStorage.getItem('currentUser'));
   }
 
   get userPrefs() {
@@ -110,7 +113,16 @@ export class AuthService extends DataService {
     let user = new JwtHelper().decodeToken(token);
     if(user.role === role) return true;
     return false;
-  } 
+  }
+
+  checkTwoRoles(role1, role2) {
+    let token = localStorage.getItem('token');
+    if (!token) return null;
+
+    let user = new JwtHelper().decodeToken(token);
+    if(user.role === role1 || user.role === role2) return true;
+    return false;
+  }
 
   confirmAccountCreation(category, username) {
     return this.http.get(this.baseUrl + '/auth/confirmaccount/' + category + '/' + username)
@@ -149,4 +161,3 @@ export class AuthService extends DataService {
       }).catch(error => { return this.handleError(error); } )  
   }
 }
- 

@@ -1,0 +1,79 @@
+.mycard {
+    padding: 20px;
+}
+
+.mycard-inverse {
+    height: 150px;
+}
+
+.mycard-title {
+    padding: 10px;
+}
+
+.mycard-img-top { 
+    padding-top: 20px;
+    height: 250px;
+}
+
+.mycard-footer {
+    padding: 0;
+    background: #fff;
+}
+
+.mybtn {
+    cursor: pointer;
+}
+
+.mycard-block {
+    color: white;
+    padding: 10px;
+}
+
+.mycard-text {
+    padding: 10px;
+}
+
+.othercard-text {
+    padding-left: 10px;
+}
+
+.sizing {
+    font-size: 16px;
+}
+
+.myJumbotron {
+    background-color:#334;
+    color:white;
+    padding: 30px;
+}
+
+.placed {
+    height: 250px;
+    width: 25em;
+}
+.spaced {
+    padding: 10px;
+}
+.cardpad {
+    padding: 5px;
+}
+.circle-shape-example { 
+    font-family: Open Sans, sans-serif; 
+    margin: 2rem; 
+}
+.circle-shape-example p { 
+    line-height: 1.8; 
+}
+.circle-shape-example .curve { 
+    width: 23%; height: auto;
+    min-width: 30px;
+    float: left;
+    margin-right:2rem; 
+    border-radius: 50%;
+    -webkit-shape-outside:circle();
+    shape-outside:circle();
+}
+.newspace {
+    padding-top: 20px;
+    padding-bottom: 1px;
+}
