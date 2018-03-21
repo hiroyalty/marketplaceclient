@@ -19,7 +19,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Http, HttpModule } from '@angular/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
-import { DataTableModule } from 'angular-4-data-table/dist';
+import { DataTableModule } from 'angular-4-data-table/src/index';
 import { CustomFormsModule } from 'ng2-validation';
 import { AuthConfig, AuthHttp } from 'angular2-jwt';
 import { CommonModule } from '@angular/common';
