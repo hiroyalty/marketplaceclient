@@ -29,7 +29,7 @@ export interface Project {
     offeredTo: Array<{string}>;
     status: string;
     projectlifespan: string;
-    url: string;
+    url: string; 
     imageUrl: string;
     projectdocs: {};
     additionalinfo: string;

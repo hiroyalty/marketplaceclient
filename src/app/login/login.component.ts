@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
           let returnUrl = localStorage.getItem('returnUrl');
           localStorage.removeItem('returnUrl');
           this.router.navigate([ returnUrl || '/' ]);
-        }
+        } 
       },
         errorMessage => {
           //this.alertService.error(errorMessage);

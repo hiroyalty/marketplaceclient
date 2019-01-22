@@ -13,6 +13,8 @@ import { ProjectCategoryService } from 'app/services/projectcategory.service';
 export class BsNavbarComponent implements OnInit {
   user$: AppUser;
   projectCategories;
+  collapsed = true;
+
   constructor(
     private authService: AuthService, 
     private router: Router, 
@@ -31,7 +33,7 @@ export class BsNavbarComponent implements OnInit {
   
   logout() {
     this.authService.logout();
-    this.router.navigate(['']);
+    this.router.navigate(['/']);
   }
 
   isLoggedIn(){
@@ -47,6 +49,10 @@ export class BsNavbarComponent implements OnInit {
     return this.authService.currentUser;
     //this.user = this.authService.currentUser();
     //return this.user;
+  }
+
+  toggleCollapsed(): void {
+    this.collapsed = !this.collapsed;
   }
 
 } 

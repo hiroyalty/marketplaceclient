@@ -9,7 +9,7 @@ import 'rxjs/add/observable/throw';
 @Injectable()
 export class DataService {
   //url: string;
-  protected baseUrl: string = 'https://jobmarketservice.dy.fi/api';
+  protected baseUrl: string = 'http://jobmarketservice.dy.fi/api';
   //protected baseUrl: string = 'https://localhost:3000/api';
 
   constructor(public http: Http) { }
@@ -64,7 +64,7 @@ export class DataService {
     //.toPromise()
     .catch(error => { return this.handleError(error); });
   }
- 
+
   public handleError(error: Response | any) {
     let errMsg: string;
     

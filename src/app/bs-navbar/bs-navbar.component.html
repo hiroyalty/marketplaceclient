@@ -3,11 +3,13 @@
   <a class="navbar-brand logo py-0" routerLink="/">
     Market Place
   </a>
-  <!--<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" 
+    aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation"
+    (click)="toggleCollapsed()">
     <span class="navbar-toggler-icon"></span>
-  </button>-->
+  </button>
 
-  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+  <div class="collapse navbar-collapse" id="navbarsExampleDefault" [ngClass]="{'collapse': collapsed, 'navbar-collapse': true}">
     <div class="col-md-4">
       <div class="dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

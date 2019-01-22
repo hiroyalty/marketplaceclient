@@ -2,6 +2,7 @@
 
 # compiled output
 /dist
+/disto
 /tmp
 /out-tsc
 
@@ -40,3 +41,5 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+npm-debug.log.1057851633
+*.html.swp
